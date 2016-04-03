@@ -1,4 +1,7 @@
 import {Component} from 'angular2/core';
+import {Router, RouteConfig, RouteParams, RouteData, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
+
+import {SettingsService} from './settings.service';
 
 import {StatusComponent} from './status.component';
 import {FeaturesComponent} from './features.component';
@@ -6,69 +9,116 @@ import {CommitsComponent} from './commits.component';
 import {AssociationsComponent} from './associations.component';
 import {ArtifactsGraphComponent} from './artifacts.graph.component';
 
-import {AppComponent} from './app.component';
+import {TestComponent} from './test.component';
+
+
+
 
 @Component({
-    selector: 'ecco-app',
-    directives: [StatusComponent, FeaturesComponent, CommitsComponent, AssociationsComponent, ArtifactsGraphComponent, AppComponent],
+    selector: 'features-route-comp',
+    directives: [FeaturesComponent],
+    template: `<features-comp [repo]="settingsService.repo"></features-comp>`
+})
+class FeaturesRouteComponent {
+    settingsService: SettingsService;
+    repo: string;
+    constructor(settingsService: SettingsService, params: RouteParams) {
+        this.settingsService = settingsService;
+
+        if (params.get('repo'))
+            this.repo = params.get('repo');
+    }
+}
+
+
+
+
+
+
+
+@Component({
+    selector: 'ecco-main',
+    inputs: ['repo'],
+    directives: [ROUTER_DIRECTIVES],
     template: `
-    
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
+        
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-bar" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">ECCO</a>
+                <a class="navbar-brand" href="">ECCO</a>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#status" aria-controls="status" data-toggle="tab">Status</a></li>
-                    <li><a href="#features" aria-controls="features" data-toggle="tab">Features</a></li>
-                    <li><a href="#commits" aria-controls="commits" data-toggle="tab">Commits</a></li>
-                    <li><a href="#associations" aria-controls="associations" data-toggle="tab">Associations</a></li>
-                    <li><a href="#artifactsgraph" aria-controls="artifactsgraph" data-toggle="tab">Artifacts Graph</a></li>
-                    
-                    <li><a href="#testapp" aria-controls="testapp" data-toggle="tab">Test</a></li>
-                    
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
             
-        </div><!-- /.container-fluid -->
+            <div class="collapse navbar-collapse" id="navigation-bar">
+                <div class="nav navbar-nav">
+                    <!--<li [class.active]="isActive(['Status'])"><a [routerLink]="['Status']">Status</a></li>-->
+                    <li [class.active]="statusLink.classList.contains('router-link-active')"><a [routerLink]="['Status']" #statusLink>Status</a></li>
+                    <!--<li [class.active]="isActive(['Features',{repo: repo}])"><a [routerLink]="['Features',{repo:repo}]">Features</a></li>-->
+                    <li [class.active]="isActive(['Features'])"><a [routerLink]="['Features']">Features</a></li>
+                    <li [class.active]="isActive(['Commits'])"><a [routerLink]="['Commits']">Commits</a></li>
+                    <li [class.active]="isActive(['Associations'])"><a [routerLink]="['Associations']">Associations</a></li>
+                    <li [class.active]="isActive(['ArtifactsGraph',{repo:settingsService.repo}])"><a [routerLink]="['ArtifactsGraph',{repo:settingsService.repo}]">Artifacts Graph</a></li>
+                    
+                    <li [class.active]="isActive(['Test'])"><a [routerLink]="['Test']">Test</a></li>
+                </div>
+            </div>
+           
+        </div>
     </nav>
 
-    <div class="container">
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="status"><status-comp></status-comp></div>
-            <div role="tabpanel" class="tab-pane" id="features"><features-comp></features-comp></div>
-            <div role="tabpanel" class="tab-pane" id="commits"><commits-comp></commits-comp></div>
-            <div role="tabpanel" class="tab-pane" id="associations"><associations-comp></associations-comp></div>
-            <div role="tabpanel" class="tab-pane" id="artifactsgraph"><artifacts-graph-comp></artifacts-graph-comp></div>
-            
-            <div role="tabpanel" class="tab-pane" id="testapp"><test-app></test-app></div>
-        </div>
-        
+    <!-- Tabs -->
+    <div class="tab-content">
+        <router-outlet></router-outlet>
     </div>
     `
 })
-export class EccoComponent { }
+@RouteConfig([
+    { path: '/status', name: 'Status', component: StatusComponent, useAsDefault: true },
+    { path: '/features', name: 'Features', component: FeaturesRouteComponent },
+    { path: '/commits', name: 'Commits', component: CommitsComponent },
+    { path: '/associations', name: 'Associations', component: AssociationsComponent },
+    { path: '/artifactsgraph', name: 'ArtifactsGraph', component: ArtifactsGraphComponent },
+    { path: '/test', name: 'Test', component: TestComponent }
+])
+export class EccoComponent {
+    settingsService: SettingsService;
+
+    router: Router;
+
+    constructor(settingsService: SettingsService, router: Router, params: RouteParams) {
+        this.settingsService = settingsService;
+
+        if (params.get('repo')) {
+            this.settingsService.repo = params.get('repo');
+            //alert("Repository URL set to : " + params.get("repo"));
+        }
+
+        this.router = router;
+    }
+
+    isActive(instruction: any[]): boolean {
+        return this.router.isRouteActive(this.router.generate(instruction));
+    }
+}
+
+
+
+
+
+@Component({
+    selector: 'main-router',
+    directives: [ROUTER_DIRECTIVES],
+    template: `<router-outlet></router-outlet>`
+})
+@RouteConfig([
+    { path: '/ecco/...', name: 'Ecco', component: EccoComponent, useAsDefault: true }
+])
+export class MainRouterComponent {
+    constructor(router: Router) {
+    }
+}

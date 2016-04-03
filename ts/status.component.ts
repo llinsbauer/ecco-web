@@ -1,18 +1,41 @@
 import {Component} from 'angular2/core';
 
+import {SettingsService} from './settings.service';
+
 @Component({
     selector: 'status-comp',
     template: `
-    STATUS
-    
-    <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-
-    <span class="label label-default">Default</span><span class="label label-primary">Primary</span>
-
-    <div class="input-group">
-        <input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2">
-        <span class="input-group-addon" id="basic-addon2">@example.com</span>
+    <div class="container">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Settings</div>
+            
+            <div class="panel-body">
+                <form (ngSubmit)="onSubmit()" #settingsForm="ngForm">
+                    <div class="input-group">
+                        <input [(ngModel)]="repositoryUrl" ngControl="repositoryUrlInput" #repositoryUrlInput="ngForm" required type="text" class="form-control" placeholder="Repository URL">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit" [disabled]="repositoryUrl == settingsService.repo">Set</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     `
 })
-export class StatusComponent { }
+export class StatusComponent {
+    settingsService: SettingsService;
+
+    repositoryUrl: string;
+
+    constructor(settingsService: SettingsService) {
+        this.settingsService = settingsService;
+
+        this.repositoryUrl = this.settingsService.repo;
+    }
+
+    onSubmit() {
+        this.settingsService.repo = this.repositoryUrl;
+    }
+}

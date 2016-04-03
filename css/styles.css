@@ -1,6 +1,9 @@
 
 body {
-    padding-top: 70px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 
@@ -12,3 +15,18 @@ body {
   stroke: #000;
   stroke-width: .5px;
 }
+
+
+
+
+.vertex {
+    stroke: #000000;
+    stroke-width: 1.5px;
+}
+.edge {
+    stroke: #000000;
+    stroke-opacity: .6;
+}
+    
+    
+    

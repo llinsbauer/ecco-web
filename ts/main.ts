@@ -1,7 +1,11 @@
 import {bootstrap} from 'angular2/platform/browser';
 import {HTTP_PROVIDERS} from 'angular2/http'
-import {EccoComponent} from './ecco.component';
+import {ROUTER_PROVIDERS} from 'angular2/router';
+
+import {MainRouterComponent, EccoComponent} from './ecco.component';
+import {SettingsService} from './settings.service';
+
 import {enableProdMode} from 'angular2/core';
 
 enableProdMode();
-bootstrap(EccoComponent, [HTTP_PROVIDERS]);
+bootstrap(MainRouterComponent, [HTTP_PROVIDERS, ROUTER_PROVIDERS, SettingsService]);
