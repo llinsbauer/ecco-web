@@ -1,0 +1,52 @@
+System.register(['angular2/core', 'angular2/common'], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
+    var __metadata = (this && this.__metadata) || function (k, v) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+    };
+    var core_1, common_1;
+    var ToggleButton;
+    return {
+        setters:[
+            function (core_1_1) {
+                core_1 = core_1_1;
+            },
+            function (common_1_1) {
+                common_1 = common_1_1;
+            }],
+        execute: function() {
+            ToggleButton = (function () {
+                function ToggleButton() {
+                    this.onToggle = new core_1.EventEmitter();
+                    this.isOn = false;
+                    this.isDisabled = false;
+                }
+                ToggleButton.prototype.toggle = function () {
+                    if (!this.isDisabled) {
+                        this.isOn = !this.isOn;
+                        this.onToggle.emit(this.isOn);
+                    }
+                };
+                ToggleButton = __decorate([
+                    core_1.Component({
+                        selector: 'toggle-button',
+                        inputs: ['isDisabled', 'label'],
+                        outputs: ['onToggle'],
+                        directives: [common_1.NgClass],
+                        template: "\n        <button type=\"button\" class=\"btn btn-primary\" \n            [ngClass]=\"{active: isOn, disabled: isDisabled}\"\n            (click)=\"toggle()\">\n                {{label}}\n        </button> \n         "
+                    }), 
+                    __metadata('design:paramtypes', [])
+                ], ToggleButton);
+                return ToggleButton;
+            }());
+            exports_1("ToggleButton", ToggleButton);
+        }
+    }
+});
+//# sourceMappingURL=togglebutton.component.js.map
