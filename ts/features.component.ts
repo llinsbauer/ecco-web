@@ -98,7 +98,7 @@ export class FeaturesComponent {
     refresh() {
         this.refresing = true;
         //this.http.get(this.settingsService.repo + "features/all.json")
-        this.http.get(this.repo + "features/all.json")
+        this.http.get(this.repo + "/features/all.json")
             .map(res => res.json())
             .subscribe(features => { this.features = features; this.raw = this.features[0].name; this.refresing = false; }, err => alert(err), () => console.log('done: get all features'));
 

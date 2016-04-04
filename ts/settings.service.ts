@@ -14,5 +14,7 @@ export class SettingsService {
 
     set repo(repo: string) {
         this._repo = repo;
+
+        window.history.pushState("repo: " + repo, "repo: " + repo, location.pathname + "?repo=" + repo);
     }
 }

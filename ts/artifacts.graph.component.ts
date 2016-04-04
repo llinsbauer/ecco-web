@@ -1,7 +1,7 @@
 import {Component, ElementRef, ViewChild} from 'angular2/core';
 import {Http, HTTP_PROVIDERS} from 'angular2/http';
 import 'rxjs/Rx';
-import {RouteParams} from 'angular2/router';
+import {RouteParams, CanReuse, ComponentInstruction} from 'angular2/router';
 
 declare var d3: any;
 
@@ -53,12 +53,12 @@ interface Graph {
         </div>
     </div>
     
-    <div #artifactsgraphview></div>
+    <div #artifactsgraphview [hidden]="svg==null" style="width:100%;height:100%;"></div>
     `,
     styles: [`
   `]
 })
-export class ArtifactsGraphComponent {
+export class ArtifactsGraphComponent implements CanReuse {
     _showLabels: boolean = true;
     _depthFade: boolean = false;
 
@@ -72,13 +72,14 @@ export class ArtifactsGraphComponent {
 
     refresing: boolean = false;
 
-    constructor(http: Http, elementRef: ElementRef, params: RouteParams) {
+    routerCanReuse(next: ComponentInstruction, prev: ComponentInstruction) {
+        alert("reused!");
+        return true;
+    }
+
+    constructor(http: Http, elementRef: ElementRef) {
         this.http = http;
         this.elementRef = elementRef;
-
-        if (params.get('repo')) {
-            this.repo = params.get('repo');
-        }
     }
 
     toggleShowLabels() {

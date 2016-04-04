@@ -51,18 +51,23 @@ class FeaturesRouteComponent {
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="">ECCO</a>
+                <!--<a class="navbar-brand" href="">ECCO</a>-->
+                <a class="navbar-brand" [routerLink]="['Ecco',{repo:encodedRepo()}]">ECCO</a>
+                <!--<a class="navbar-brand" href="ecco/?repo={{settingsService.repo}}">ECCO</a>-->
             </div>
             
             <div class="collapse navbar-collapse" id="navigation-bar">
                 <div class="nav navbar-nav">
                     <!--<li [class.active]="isActive(['Status'])"><a [routerLink]="['Status']">Status</a></li>-->
                     <li [class.active]="statusLink.classList.contains('router-link-active')"><a [routerLink]="['Status']" #statusLink>Status</a></li>
-                    <!--<li [class.active]="isActive(['Features',{repo: repo}])"><a [routerLink]="['Features',{repo:repo}]">Features</a></li>-->
+                    
+                    <!--<li [class.active]="isActive(['Features',{repo:settingsService.repo}])"><a [routerLink]="['Features',{repo:settingsService.repo}]">Features</a></li>-->
                     <li [class.active]="isActive(['Features'])"><a [routerLink]="['Features']">Features</a></li>
+                    
                     <li [class.active]="isActive(['Commits'])"><a [routerLink]="['Commits']">Commits</a></li>
                     <li [class.active]="isActive(['Associations'])"><a [routerLink]="['Associations']">Associations</a></li>
-                    <li [class.active]="isActive(['ArtifactsGraph',{repo:settingsService.repo}])"><a [routerLink]="['ArtifactsGraph',{repo:settingsService.repo}]">Artifacts Graph</a></li>
+                    <!--<li [class.active]="isActive(['ArtifactsGraph',{repo:settingsService.repo}])"><a [routerLink]="['ArtifactsGraph',{repo:settingsService.repo}]">Artifacts Graph</a></li>-->
+                    <li [class.active]="isActive(['ArtifactsGraph'])"><a [routerLink]="['ArtifactsGraph']">Artifacts Graph</a></li>
                     
                     <li [class.active]="isActive(['Test'])"><a [routerLink]="['Test']">Test</a></li>
                 </div>
@@ -94,8 +99,10 @@ export class EccoComponent {
         this.settingsService = settingsService;
 
         if (params.get('repo')) {
-            this.settingsService.repo = params.get('repo');
+            this.settingsService.repo = decodeURIComponent(params.get('repo'));
             //alert("Repository URL set to : " + params.get("repo"));
+        } else {
+            this.settingsService.repo = 'repo/';
         }
 
         this.router = router;
@@ -103,6 +110,10 @@ export class EccoComponent {
 
     isActive(instruction: any[]): boolean {
         return this.router.isRouteActive(this.router.generate(instruction));
+    }
+
+    encodedRepo(): string {
+        return encodeURIComponent(this.settingsService.repo);
     }
 }
 

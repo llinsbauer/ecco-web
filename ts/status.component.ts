@@ -14,9 +14,9 @@ import {SettingsService} from './settings.service';
                 <form (ngSubmit)="onSubmit()" #settingsForm="ngForm">
                     <div class="input-group">
                         <input [(ngModel)]="repositoryUrl" ngControl="repositoryUrlInput" #repositoryUrlInput="ngForm" required type="text" class="form-control" placeholder="Repository URL">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit" [disabled]="repositoryUrl == settingsService.repo">Set</button>
-                        </span>
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit" [disabled]="repositoryUrl == settingsService.repo">&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -37,5 +37,7 @@ export class StatusComponent {
 
     onSubmit() {
         this.settingsService.repo = this.repositoryUrl;
+
+        location.search = "repo=" + encodeURIComponent(this.settingsService.repo);
     }
 }
