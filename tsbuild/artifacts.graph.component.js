@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router']
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, router_1;
+    var core_1, http_1;
     var ArtifactsGraphComponent;
     return {
         setters:[
@@ -20,13 +20,10 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router']
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (_1) {},
-            function (router_1_1) {
-                router_1 = router_1_1;
-            }],
+            function (_1) {}],
         execute: function() {
             ArtifactsGraphComponent = (function () {
-                function ArtifactsGraphComponent(http, elementRef, params) {
+                function ArtifactsGraphComponent(http, elementRef) {
                     this._showLabels = true;
                     this._depthFade = false;
                     this.svg = null;
@@ -34,10 +31,11 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router']
                     this.refresing = false;
                     this.http = http;
                     this.elementRef = elementRef;
-                    if (params.get('repo')) {
-                        this.repo = params.get('repo');
-                    }
                 }
+                ArtifactsGraphComponent.prototype.routerCanReuse = function (next, prev) {
+                    alert("reused!");
+                    return true;
+                };
                 ArtifactsGraphComponent.prototype.toggleShowLabels = function () {
                     this._showLabels = !this._showLabels;
                 };
@@ -119,10 +117,10 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', 'angular2/router']
                         inputs: ['repo'],
                         viewProviders: [http_1.HTTP_PROVIDERS],
                         providers: [core_1.ElementRef],
-                        template: "\n    <nav class=\"navbar-fixed-bottom navbar navbar-default\" role=\"navigation\">\n        <div class=\"container-fluid\">\n            <form class=\"navbar-form navbar-left\">\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"refresh()\">Refresh</button>\n            \n                <button type=\"button\" class=\"btn btn-primary\" [ngClass]=\"{active: _showLabels}\" (click)=\"toggleShowLabels()\">Show Labels</button>\n                <button type=\"button\" class=\"btn btn-primary\" [ngClass]=\"{active: _depthFade}\" (click)=\"toggleDepthFade()\">Depth Fade</button>\n            \n                <!--\n                <toggle-button [label]=\"'Depth Fade'\" (onToggle)=\"depthFade($event)\"></toggle-button>\n                <toggle-button [label]=\"'Show Labels'\" (onToggle)=\"showLabels($event)\"></toggle-button>\n                -->\n                \n                <span class=\"label label-default\">{{repo}}</span>\n            </form> \n      \n        </div>\n    </nav>\n    \n    <div class=\"container\" [hidden]=\"svg!=null\">\n        <div style=\"height:100%;display:flex;align-items:center;justify-content:center;\">\n            <span (click)=\"refresh()\" class=\"glyphicon glyphicon-refresh\" style=\"font-size:50vmin;color:gray;cursor:pointer;\"></span>\n        </div>\n    </div>\n    \n    <div #artifactsgraphview></div>\n    ",
+                        template: "\n    <nav class=\"navbar-fixed-bottom navbar navbar-default\" role=\"navigation\">\n        <div class=\"container-fluid\">\n            <form class=\"navbar-form navbar-left\">\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"refresh()\">Refresh</button>\n            \n                <button type=\"button\" class=\"btn btn-primary\" [ngClass]=\"{active: _showLabels}\" (click)=\"toggleShowLabels()\">Show Labels</button>\n                <button type=\"button\" class=\"btn btn-primary\" [ngClass]=\"{active: _depthFade}\" (click)=\"toggleDepthFade()\">Depth Fade</button>\n            \n                <!--\n                <toggle-button [label]=\"'Depth Fade'\" (onToggle)=\"depthFade($event)\"></toggle-button>\n                <toggle-button [label]=\"'Show Labels'\" (onToggle)=\"showLabels($event)\"></toggle-button>\n                -->\n                \n                <span class=\"label label-default\">{{repo}}</span>\n            </form> \n      \n        </div>\n    </nav>\n    \n    <div class=\"container\" [hidden]=\"svg!=null\">\n        <div style=\"height:100%;display:flex;align-items:center;justify-content:center;\">\n            <span (click)=\"refresh()\" class=\"glyphicon glyphicon-refresh\" style=\"font-size:50vmin;color:gray;cursor:pointer;\"></span>\n        </div>\n    </div>\n    \n    <div #artifactsgraphview [hidden]=\"svg==null\" style=\"width:100%;height:100%;\"></div>\n    ",
                         styles: ["\n  "]
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http, core_1.ElementRef, router_1.RouteParams])
+                    __metadata('design:paramtypes', [http_1.Http, core_1.ElementRef])
                 ], ArtifactsGraphComponent);
                 return ArtifactsGraphComponent;
             }());

@@ -34,7 +34,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_
                     var _this = this;
                     this.refresing = true;
                     //this.http.get(this.settingsService.repo + "features/all.json")
-                    this.http.get(this.repo + "features/all.json")
+                    this.http.get(this.repo + "/features/all.json")
                         .map(function (res) { return res.json(); })
                         .subscribe(function (features) { _this.features = features; _this.raw = _this.features[0].name; _this.refresing = false; }, function (err) { return alert(err); }, function () { return console.log('done: get all features'); });
                 };
