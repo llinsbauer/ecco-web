@@ -52,7 +52,7 @@ class FeaturesRouteComponent {
                     <span class="icon-bar"></span>
                 </button>
                 <!--<a class="navbar-brand" href="">ECCO</a>-->
-                <a class="navbar-brand" [routerLink]="['Ecco',{repo:encodedRepo()}]">ECCO</a>
+                <a class="navbar-brand" [routerLink]="['ECCO',{repo:encodedRepo()}]">ECCO</a>
                 <!--<a class="navbar-brand" href="ecco/?repo={{settingsService.repo}}">ECCO</a>-->
             </div>
             
@@ -102,7 +102,7 @@ export class EccoComponent {
             this.settingsService.repo = decodeURIComponent(params.get('repo'));
             //alert("Repository URL set to : " + params.get("repo"));
         } else {
-            this.settingsService.repo = 'repo/';
+            this.settingsService.repo = 'repo/'; // default
         }
 
         this.router = router;
@@ -127,7 +127,7 @@ export class EccoComponent {
     template: `<router-outlet></router-outlet>`
 })
 @RouteConfig([
-    { path: '/ecco/...', name: 'Ecco', component: EccoComponent, useAsDefault: true }
+    { path: '/ecco/...', name: 'ECCO', component: EccoComponent, useAsDefault: true }
 ])
 export class MainRouterComponent {
     constructor(router: Router) {

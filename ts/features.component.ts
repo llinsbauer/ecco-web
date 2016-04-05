@@ -36,6 +36,17 @@ interface Feature {
         </div>
     </nav>
 
+    <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span class="sr-only">Error:</span> <span >{{errorMessage}}</span>
+    </div>
+
+    <div class="progress" *ngIf="refresing">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="panel panel-default">
             <!-- Default panel contents -->
@@ -89,6 +100,9 @@ export class FeaturesComponent {
 
     refresing: boolean = false;
 
+    error: any;
+    errorMessage: string;
+
     //constructor(settingsService: SettingsService, http: Http) {
     constructor(http: Http) {
         //this.settingsService = settingsService;
@@ -100,7 +114,21 @@ export class FeaturesComponent {
         //this.http.get(this.settingsService.repo + "features/all.json")
         this.http.get(this.repo + "/features/all.json")
             .map(res => res.json())
-            .subscribe(features => { this.features = features; this.raw = this.features[0].name; this.refresing = false; }, err => alert(err), () => console.log('done: get all features'));
+            .subscribe(
+            features => {
+                this.features = features;
+                this.raw = this.features[0].name;
+                this.refresing = false;
+            },
+            error => {
+                this.error = <any>error;
+                this.refresing = false;
+                this.errorMessage = error.status + ' ' + error.url;
+                console.error('error: ' + this.errorMessage);
+                //console.error('error: ' + error.status + ' ' + error.statusText + ' ' + error.headers + ' ' + error.type + ' ' + error.url);
+                //console.log(Object.keys(error));
+            },
+            () => console.log('done: get all features'));
 
     }
 

@@ -1,4 +1,5 @@
 import {Component} from 'angular2/core';
+import {Router} from 'angular2/router';
 
 import {SettingsService} from './settings.service';
 
@@ -27,10 +28,14 @@ import {SettingsService} from './settings.service';
 export class StatusComponent {
     settingsService: SettingsService;
 
+    router: Router;
+
     repositoryUrl: string;
 
-    constructor(settingsService: SettingsService) {
+    constructor(router: Router, settingsService: SettingsService) {
         this.settingsService = settingsService;
+
+        this.router = router;
 
         this.repositoryUrl = this.settingsService.repo;
     }
@@ -38,6 +43,7 @@ export class StatusComponent {
     onSubmit() {
         this.settingsService.repo = this.repositoryUrl;
 
-        location.search = "repo=" + encodeURIComponent(this.settingsService.repo);
+        //location.search = "repo=" + encodeURIComponent(this.settingsService.repo);
+        this.router.parent.navigate(['/ECCO', { repo: encodeURIComponent(this.settingsService.repo) }]);
     }
 }
