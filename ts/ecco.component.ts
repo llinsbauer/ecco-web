@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core';
+import {Component, Inject, OpaqueToken} from 'angular2/core';
 import {Router, RouteConfig, RouteParams, RouteData, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
 
 import {SettingsService} from './settings.service';
@@ -13,6 +13,9 @@ import {TestComponent} from './test.component';
 
 
 
+export const DEFAULT_REPO_URL: OpaqueToken = new OpaqueToken('defaultRepositoryUrl');
+
+
 
 @Component({
     selector: 'features-route-comp',
@@ -21,15 +24,23 @@ import {TestComponent} from './test.component';
 })
 class FeaturesRouteComponent {
     settingsService: SettingsService;
-    repo: string;
-    constructor(settingsService: SettingsService, params: RouteParams) {
+    constructor(settingsService: SettingsService) {
         this.settingsService = settingsService;
-
-        if (params.get('repo'))
-            this.repo = params.get('repo');
     }
 }
 
+
+@Component({
+    selector: 'artifactsgraph-route-comp',
+    directives: [ArtifactsGraphComponent],
+    template: `<artifacts-graph-comp [repo]="settingsService.repo"></artifacts-graph-comp>`
+})
+class ArtifactsGraphRouteComponent {
+    settingsService: SettingsService;
+    constructor(settingsService: SettingsService) {
+        this.settingsService = settingsService;
+    }
+}
 
 
 
@@ -87,7 +98,7 @@ class FeaturesRouteComponent {
     { path: '/features', name: 'Features', component: FeaturesRouteComponent },
     { path: '/commits', name: 'Commits', component: CommitsComponent },
     { path: '/associations', name: 'Associations', component: AssociationsComponent },
-    { path: '/artifactsgraph', name: 'ArtifactsGraph', component: ArtifactsGraphComponent },
+    { path: '/artifactsgraph', name: 'ArtifactsGraph', component: ArtifactsGraphRouteComponent },
     { path: '/test', name: 'Test', component: TestComponent }
 ])
 export class EccoComponent {
@@ -95,14 +106,15 @@ export class EccoComponent {
 
     router: Router;
 
-    constructor(settingsService: SettingsService, router: Router, params: RouteParams) {
+    constructor( @Inject(DEFAULT_REPO_URL) defaultRepositoryUrl, settingsService: SettingsService, router: Router, params: RouteParams) {
         this.settingsService = settingsService;
 
         if (params.get('repo')) {
             this.settingsService.repo = decodeURIComponent(params.get('repo'));
             //alert("Repository URL set to : " + params.get("repo"));
         } else {
-            this.settingsService.repo = 'repo/'; // default
+            //this.settingsService.repo = 'repo/'; // default
+            this.settingsService.repo = defaultRepositoryUrl; // default
         }
 
         this.router = router;

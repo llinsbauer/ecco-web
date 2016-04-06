@@ -6,8 +6,9 @@ import {RouteParams, CanReuse, ComponentInstruction} from 'angular2/router';
 declare var d3: any;
 
 interface Node {
-    association: string;
-    artifacts: number;
+    id: number;
+    associationId: number;
+    numArtifacts: number;
     depth: number;
     label: string;
 }
@@ -18,6 +19,9 @@ interface Edge {
 }
 
 interface Graph {
+    numNodes: number;
+    maxNumArtifacts: number;
+    maxDepth: number;
     nodes: Node[];
     edges: Edge[];
 }
@@ -31,7 +35,7 @@ interface Graph {
     <nav class="navbar-fixed-bottom navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <form class="navbar-form navbar-left">
-                <button type="button" class="btn btn-primary" (click)="refresh()">Refresh</button>
+                <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="refreshing" [ngClass]="{disabled: refreshing}">Refresh</button>
             
                 <button type="button" class="btn btn-primary" [ngClass]="{active: _showLabels}" (click)="toggleShowLabels()">Show Labels</button>
                 <button type="button" class="btn btn-primary" [ngClass]="{active: _depthFade}" (click)="toggleDepthFade()">Depth Fade</button>
@@ -47,13 +51,24 @@ interface Graph {
         </div>
     </nav>
     
-    <div class="container" [hidden]="svg!=null">
+    <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span class="sr-only">Error:</span> <span >{{errorMessage}}</span>
+    </div>
+
+    <div class="progress" *ngIf="refreshing">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+
+    <div class="container" [hidden]="svg!=null || refreshing">
         <div style="height:100%;display:flex;align-items:center;justify-content:center;">
             <span (click)="refresh()" class="glyphicon glyphicon-refresh" style="font-size:50vmin;color:gray;cursor:pointer;"></span>
         </div>
     </div>
     
-    <div #artifactsgraphview [hidden]="svg==null" style="width:100%;height:100%;"></div>
+    <div #artifactsgraphview [hidden]="svg==null" style="width:100%;height:100%;border:2px solid #000000;"></div>
     `,
     styles: [`
   `]
@@ -64,13 +79,15 @@ export class ArtifactsGraphComponent implements CanReuse {
 
     svg: any = null;
     @ViewChild('artifactsgraphview') artifactsgraphview;
+    graph: Graph = null;
 
-    http: Http;
     elementRef: ElementRef;
+    http: Http;
 
     repo: string = 'repo/';
-
-    refresing: boolean = false;
+    refreshing: boolean = false;
+    error: any;
+    errorMessage: string;
 
     routerCanReuse(next: ComponentInstruction, prev: ComponentInstruction) {
         alert("reused!");
@@ -82,34 +99,104 @@ export class ArtifactsGraphComponent implements CanReuse {
         this.elementRef = elementRef;
     }
 
+    set showLabels(showLabels: boolean) {
+        this._showLabels = showLabels;
+
+        if (this.graph) {
+            if (this._showLabels) {
+                var node = d3.select(this.artifactsgraphview.nativeElement).select("svg").selectAll(".node");
+                node.append("text")
+                    .attr("x", 12)
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", "middle")
+                    .text(function(node: Node) {
+                        if (node.numArtifacts > 1)
+                            return "[" + node.numArtifacts + "]";
+                        else
+                            return node.label;
+                    });
+            } else {
+                d3.select(this.artifactsgraphview.nativeElement).select("svg").selectAll(".node").selectAll("text").remove();
+            }
+        }
+    }
+
+    get showLabels(): boolean {
+        return this._showLabels;
+    }
+
+    set depthFade(depthFade: boolean) {
+        this._depthFade = depthFade;
+
+        if (this.graph) {
+            if (this._depthFade) {
+                var maxDepth = this.graph.maxDepth;
+                var circle = d3.select(this.artifactsgraphview.nativeElement).select("svg").selectAll(".node").selectAll("circle")
+                    .style("fill", function(node: Node) {
+                        var color = node.depth * 200.0 / maxDepth;
+                        return "rgb(" + color + "," + color + "," + color + ")";
+                    });
+            } else {
+                var color = d3.scale.category20();
+                var circle = d3.select(this.artifactsgraphview.nativeElement).select("svg").selectAll(".node").selectAll("circle")
+                    .style("fill", function(node: Node) { return color(node.associationId); })
+            }
+        }
+    }
+
+    get depthFade(): boolean {
+        return this._depthFade;
+    }
+
     toggleShowLabels() {
-        this._showLabels = !this._showLabels;
+        this.showLabels = !this.showLabels;
     }
 
     toggleDepthFade() {
-        this._depthFade = !this._depthFade;
+        this.depthFade = !this.depthFade;
     }
 
     refresh() {
-        this.refresing = true;
-        this.http.get(this.repo + "graphs/artifacts.json")
-            .map(res => res.json())
-            .subscribe(graph => {
-                this.refreshGraph(graph);
+        if (!this.refreshing) {
+            this.refreshing = true;
+            this.http.get(this.repo + "graph/artifacts")
+                .map(res => res.json())
+                .subscribe(graph => {
+                    this.graph = graph;
+                    this.refreshGraph(graph);
 
-                this.refresing = false;
-            }, err => alert(err), () => console.log('done: get artifacts graph'));
+                    this.refreshing = false;
+                },
+                error => {
+                    this.graph = null;
+
+                    this.refreshing = false;
+                    this.error = <any>error;
+                    this.errorMessage = error.status + ' ' + error.url + ', ' + this.repo + 'feature';
+                    console.error('error: ' + this.errorMessage);
+                },
+                () => console.log('done: get artifacts graph'));
+        }
+    }
+
+    nodeSize(numArtifacts: number, maxNumArtifacts: number): number {
+        return 5 + numArtifacts / maxNumArtifacts * 50;
     }
 
     refreshGraph(graph: Graph) {
+        var radius = d3.scale.sqrt().range([0, 6]);
+
         var width = 500,
             height = 500;
 
         var color = d3.scale.category20();
 
         var force = d3.layout.force()
-            .charge(-120)
-            .linkDistance(30)
+            .charge(-400)
+            //.linkDistance(30)
+            .linkDistance(function(link) {
+                return (5 + link.source.numArtifacts / graph.maxNumArtifacts * 50) + (5 + link.target.numArtifacts / graph.maxNumArtifacts * 50) + 5;
+            })
             .size([width, height]);
 
         /*
@@ -142,21 +229,27 @@ export class ArtifactsGraphComponent implements CanReuse {
             .attr("class", "edge")
             .style("stroke-width", function(edge: Edge) { return 1; });
 
-        var node = svg.selectAll(".vertex")
+        var node = svg.selectAll(".node")
             .data(graph.nodes)
-            .enter().append("circle")
-            .attr("class", "vertex")
-            .attr("r", 5)
-            .style("fill", function(node) { return color(node.association); }) // TODO: get color for association
+            .enter()
+            .append("g")
+            .attr("class", "node")
             .call(force.drag);
 
-        node.append("title")
+        var circle = node.append("circle")
+            .attr("r", function(node: Node) { return 5 + node.numArtifacts / graph.maxNumArtifacts * 50; });
+
+        circle.append("title")
             .text(function(node: Node) {
-                if (node.artifacts > 1)
-                    return "[" + node.artifacts + "]";
+                if (node.numArtifacts > 1)
+                    return "[" + node.numArtifacts + "]";
                 else
                     return node.label;
             });
+
+        // TODO: this is not a very nice solution
+        this.showLabels = this._showLabels;
+        this.depthFade = this._depthFade;
 
         force.on("tick", function() {
             link.attr("x1", function(d) { return d.source.x; })
@@ -164,8 +257,7 @@ export class ArtifactsGraphComponent implements CanReuse {
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; });
 
-            node.attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
+            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         });
 
     }

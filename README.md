@@ -13,7 +13,7 @@ Uses:
 Steps for deploying the web interface onto a web server:
 * Set `<base href="/">` in `index.html` to where the web interface will be deployed (relative to the domain).
 * Set `LocationStrategy` in `ts/main.ts` to either HTML5 History API (Default) or Hashbang (in case the server does not support the former).
-* Set default repository URL in `ts/ecco.component.ts`.
+* Set DEFAULT_REPO_URL in `ts/main.ts`.
 * Compile the project: `npm run tsc`
 * Upload `css`, `js`, `tsbuild`, `index.html` to web server.
 

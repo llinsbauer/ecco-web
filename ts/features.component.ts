@@ -17,7 +17,7 @@ interface Feature {
     <nav class="navbar-fixed-bottom navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <form class="navbar-form navbar-left">
-                <button type="button" class="btn btn-primary" (click)="refresh()" [ngClass]="{disabled: refresing}">Refresh</button>
+                <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="refreshing" [ngClass]="{disabled: refreshing}">Refresh</button>
                 <span class="label label-default">{{repo}}</span>
                 <!--<span class="label label-default">{{settingsService.repo}}</span>-->
             </form>
@@ -41,7 +41,7 @@ interface Feature {
         <span class="sr-only">Error:</span> <span >{{errorMessage}}</span>
     </div>
 
-    <div class="progress" *ngIf="refresing">
+    <div class="progress" *ngIf="refreshing">
         <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
             <span class="sr-only"></span>
         </div>
@@ -89,47 +89,42 @@ interface Feature {
     `
 })
 export class FeaturesComponent {
-    //settingsService: SettingsService;
-
-    http: Http;
-
     features: Feature[];
     raw: String;
 
+    http: Http;
+
     repo: string = 'repo/';
-
-    refresing: boolean = false;
-
+    refreshing: boolean = false;
     error: any;
     errorMessage: string;
 
-    //constructor(settingsService: SettingsService, http: Http) {
     constructor(http: Http) {
-        //this.settingsService = settingsService;
         this.http = http;
     }
 
     refresh() {
-        this.refresing = true;
-        //this.http.get(this.settingsService.repo + "features/all.json")
-        this.http.get(this.repo + "/features/all.json")
-            .map(res => res.json())
-            .subscribe(
-            features => {
-                this.features = features;
-                this.raw = this.features[0].name;
-                this.refresing = false;
-            },
-            error => {
-                this.error = <any>error;
-                this.refresing = false;
-                this.errorMessage = error.status + ' ' + error.url;
-                console.error('error: ' + this.errorMessage);
-                //console.error('error: ' + error.status + ' ' + error.statusText + ' ' + error.headers + ' ' + error.type + ' ' + error.url);
-                //console.log(Object.keys(error));
-            },
-            () => console.log('done: get all features'));
-
+        if (!this.refreshing) {
+            this.refreshing = true;
+            //this.http.get(this.settingsService.repo + "features/all.json")
+            this.http.get(this.repo + "feature")
+                .map(res => res.json())
+                .subscribe(
+                features => {
+                    this.features = features;
+                    this.raw = this.features[0].name;
+                    this.refreshing = false;
+                },
+                error => {
+                    this.error = <any>error;
+                    this.refreshing = false;
+                    this.errorMessage = error.status + ' ' + error.url + ', ' + this.repo + 'feature';
+                    console.error('error: ' + this.errorMessage);
+                    //console.error('error: ' + error.status + ' ' + error.statusText + ' ' + error.headers + ' ' + error.type + ' ' + error.url);
+                    //console.log(Object.keys(error));
+                },
+                () => console.log('done: get all features'));
+        }
     }
 
 }
