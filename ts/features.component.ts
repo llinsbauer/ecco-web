@@ -1,6 +1,7 @@
 import {Component} from 'angular2/core';
 import {Http, HTTP_PROVIDERS} from 'angular2/http';
 import 'rxjs/Rx';
+import {RouteParams, CanReuse, ComponentInstruction} from 'angular2/router';
 
 import {SettingsService} from './settings.service';
 
@@ -16,10 +17,20 @@ interface Feature {
     template: `
     <nav class="navbar-fixed-bottom navbar navbar-default" role="navigation">
         <div class="container-fluid">
-            <form class="navbar-form navbar-left">
-                <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="refreshing" [ngClass]="{disabled: refreshing}">Refresh</button>
-                <span class="label label-default">{{repo}}</span>
+            <form (ngSubmit)="refresh()" class="navbar-form navbar-left">
+                <!--<span class="label label-default">{{repo}}</span>-->
                 <!--<span class="label label-default">{{settingsService.repo}}</span>-->
+                <div class="input-group">
+                    <span class="input-group-addon">{{settingsService.repo}}</span>
+                    <input type="text" class="form-control" [(ngModel)]="featuresUrl" required>
+                    <span class="input-group-addon">/&lt;name&gt;/&lt;version&gt;/</span>
+                    <div class="input-group-btn">
+                        <!--<button class="btn btn-default" type="submit" [disabled]="featuresUrl == settingsService.feature">&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;</button>-->
+                        <button class="btn btn-default" type="submit" [disabled]="refreshing">&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;</button>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="refreshing" [ngClass]="{disabled: refreshing}">Refresh</button>
             </form>
             
             <!--
@@ -88,10 +99,12 @@ interface Feature {
     </div>
     `
 })
-export class FeaturesComponent {
+export class FeaturesComponent implements CanReuse {
     features: Feature[];
-    raw: String;
+    //featureVersions: FeatureVersion[];
+    featuresUrl: string;
 
+    settingsService: SettingsService; // TODO: once the component reuse works i can replace settingsService.feature with a feature field in this component!
     http: Http;
 
     repo: string = 'repo/';
@@ -99,26 +112,36 @@ export class FeaturesComponent {
     error: any;
     errorMessage: string;
 
-    constructor(http: Http) {
+    constructor(settingsService: SettingsService, http: Http) {
+        this.settingsService = settingsService;
         this.http = http;
+
+        this.featuresUrl = "feature";
+    }
+
+    routerCanReuse(next: ComponentInstruction, prev: ComponentInstruction) {
+        return true;
     }
 
     refresh() {
         if (!this.refreshing) {
             this.refreshing = true;
             //this.http.get(this.settingsService.repo + "features/all.json")
-            this.http.get(this.repo + "feature")
+            //this.http.get(this.repo + "feature")
+            this.http.get(this.settingsService.repo + this.featuresUrl)
                 .map(res => res.json())
                 .subscribe(
                 features => {
                     this.features = features;
-                    this.raw = this.features[0].name;
+
                     this.refreshing = false;
+                    this.error = null;
+                    this.errorMessage = null;
                 },
                 error => {
                     this.error = <any>error;
                     this.refreshing = false;
-                    this.errorMessage = error.status + ' ' + error.url + ', ' + this.repo + 'feature';
+                    this.errorMessage = error.status + ' ' + error.url + ', ' + this.settingsService.repo + this.featuresUrl;
                     console.error('error: ' + this.errorMessage);
                     //console.error('error: ' + error.status + ' ' + error.statusText + ' ' + error.headers + ' ' + error.type + ' ' + error.url);
                     //console.log(Object.keys(error));
@@ -126,5 +149,4 @@ export class FeaturesComponent {
                 () => console.log('done: get all features'));
         }
     }
-
 }

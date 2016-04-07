@@ -12,5 +12,5 @@ import {enableProdMode} from 'angular2/core';
 enableProdMode();
 
 
-bootstrap(MainRouterComponent, [HTTP_PROVIDERS, ROUTER_PROVIDERS, SettingsService, provide(DEFAULT_REPO_URL, { useValue: 'repo/' })]);
-//bootstrap(MainRouterComponent, [HTTP_PROVIDERS, ROUTER_PROVIDERS, SettingsService, provide(DEFAULT_REPO_URL, { useValue: 'repo/' }), provide(LocationStrategy, { useClass: HashLocationStrategy })]);
+//bootstrap(MainRouterComponent, [HTTP_PROVIDERS, ROUTER_PROVIDERS, SettingsService, provide(DEFAULT_REPO_URL, { useValue: 'repo/' })]);
+bootstrap(MainRouterComponent, [HTTP_PROVIDERS, ROUTER_PROVIDERS, SettingsService, provide(DEFAULT_REPO_URL, { useValue: 'repo/' }), provide(LocationStrategy, { useClass: HashLocationStrategy })]);

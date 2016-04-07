@@ -34,7 +34,22 @@ interface Graph {
     template: `
     <nav class="navbar-fixed-bottom navbar navbar-default" role="navigation">
         <div class="container-fluid">
-            <form class="navbar-form navbar-left">
+            <form (ngSubmit)="refresh()" class="navbar-form navbar-left">
+                <!--<span class="label label-default">{{repo}}</span>-->
+                <div class="input-group">
+                    <span class="input-group-addon">{{repo}}</span>
+                    <input type="text" class="form-control" [(ngModel)]="artifactsGraphUrl" required>
+                    <span class="input-group-addon">?maxChildren=</span>
+                    <input type="text" class="form-control" [(ngModel)]="maxChildren" required>
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit" [disabled]="refreshing">&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;</button>
+                        <!--
+                        <button class="btn btn-default" type="submit" [disabled]="maxChildren == savedMaxChildren && artifactsGraphUrl == savedArtifactsGraphUrl">&nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp;</button>
+                        <button class="btn btn-default" type="submit" [disabled]="maxChildren == savedMaxChildren && artifactsGraphUrl == savedArtifactsGraphUrl">&nbsp;<span class="glyphicon glyphicon-remove"></span>&nbsp;</button>
+                        -->
+                    </div>
+                </div>
+                
                 <button type="button" class="btn btn-primary" (click)="refresh()" [disabled]="refreshing" [ngClass]="{disabled: refreshing}">Refresh</button>
             
                 <button type="button" class="btn btn-primary" [ngClass]="{active: _showLabels}" (click)="toggleShowLabels()">Show Labels</button>
@@ -44,8 +59,6 @@ interface Graph {
                 <toggle-button [label]="'Depth Fade'" (onToggle)="depthFade($event)"></toggle-button>
                 <toggle-button [label]="'Show Labels'" (onToggle)="showLabels($event)"></toggle-button>
                 -->
-                
-                <span class="label label-default">{{repo}}</span>
             </form> 
       
         </div>
@@ -80,6 +93,9 @@ export class ArtifactsGraphComponent implements CanReuse {
     svg: any = null;
     @ViewChild('artifactsgraphview') artifactsgraphview;
     graph: Graph = null;
+
+    artifactsGraphUrl: string = 'graph/artifacts';
+    maxChildren: number = 100;
 
     elementRef: ElementRef;
     http: Http;
@@ -159,20 +175,23 @@ export class ArtifactsGraphComponent implements CanReuse {
     refresh() {
         if (!this.refreshing) {
             this.refreshing = true;
-            this.http.get(this.repo + "graph/artifacts")
+            this.http.get(this.repo + this.artifactsGraphUrl + "?maxChildren=" + this.maxChildren)
                 .map(res => res.json())
                 .subscribe(graph => {
                     this.graph = graph;
-                    this.refreshGraph(graph);
 
                     this.refreshing = false;
+                    this.error = null;
+                    this.errorMessage = null;
+
+                    this.refreshGraph(graph);
                 },
                 error => {
                     this.graph = null;
 
                     this.refreshing = false;
                     this.error = <any>error;
-                    this.errorMessage = error.status + ' ' + error.url + ', ' + this.repo + 'feature';
+                    this.errorMessage = error.status + ' ' + error.url + ', ' + this.repo + this.artifactsGraphUrl + "?maxChildren=" + this.maxChildren;
                     console.error('error: ' + this.errorMessage);
                 },
                 () => console.log('done: get artifacts graph'));
