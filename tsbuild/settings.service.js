@@ -27,8 +27,9 @@ System.register(['angular2/core'], function(exports_1, context_1) {
                         return this._repo;
                     },
                     set: function (repo) {
-                        this._repo = repo;
-                        window.history.pushState("repo: " + repo, "repo: " + repo, location.pathname + "?repo=" + repo);
+                        if (this._repo != repo) {
+                            this._repo = repo;
+                        }
                     },
                     enumerable: true,
                     configurable: true

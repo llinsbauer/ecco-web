@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_1, context_1) {
+System.register(['angular2/core', 'angular2/http', 'rxjs/Rx', './settings.service'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1;
+    var core_1, http_1, settings_service_1;
     var FeaturesComponent;
     return {
         setters:[
@@ -20,32 +20,53 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (_1) {}],
+            function (_1) {},
+            function (settings_service_1_1) {
+                settings_service_1 = settings_service_1_1;
+            }],
         execute: function() {
             FeaturesComponent = (function () {
-                //constructor(settingsService: SettingsService, http: Http) {
-                function FeaturesComponent(http) {
+                function FeaturesComponent(settingsService, http) {
                     this.repo = 'repo/';
-                    this.refresing = false;
-                    //this.settingsService = settingsService;
+                    this.refreshing = false;
+                    this.settingsService = settingsService;
                     this.http = http;
+                    this.featuresUrl = "feature";
                 }
+                FeaturesComponent.prototype.routerCanReuse = function (next, prev) {
+                    return true;
+                };
                 FeaturesComponent.prototype.refresh = function () {
                     var _this = this;
-                    this.refresing = true;
-                    //this.http.get(this.settingsService.repo + "features/all.json")
-                    this.http.get(this.repo + "/features/all.json")
-                        .map(function (res) { return res.json(); })
-                        .subscribe(function (features) { _this.features = features; _this.raw = _this.features[0].name; _this.refresing = false; }, function (err) { return alert(err); }, function () { return console.log('done: get all features'); });
+                    if (!this.refreshing) {
+                        this.refreshing = true;
+                        //this.http.get(this.settingsService.repo + "features/all.json")
+                        //this.http.get(this.repo + "feature")
+                        this.http.get(this.settingsService.repo + this.featuresUrl)
+                            .map(function (res) { return res.json(); })
+                            .subscribe(function (features) {
+                            _this.features = features;
+                            _this.refreshing = false;
+                            _this.error = null;
+                            _this.errorMessage = null;
+                        }, function (error) {
+                            _this.error = error;
+                            _this.refreshing = false;
+                            _this.errorMessage = error.status + ' ' + error.url + ', ' + _this.settingsService.repo + _this.featuresUrl;
+                            console.error('error: ' + _this.errorMessage);
+                            //console.error('error: ' + error.status + ' ' + error.statusText + ' ' + error.headers + ' ' + error.type + ' ' + error.url);
+                            //console.log(Object.keys(error));
+                        }, function () { return console.log('done: get all features'); });
+                    }
                 };
                 FeaturesComponent = __decorate([
                     core_1.Component({
                         selector: 'features-comp',
                         inputs: ['repo'],
                         viewProviders: [http_1.HTTP_PROVIDERS],
-                        template: "\n    <nav class=\"navbar-fixed-bottom navbar navbar-default\" role=\"navigation\">\n        <div class=\"container-fluid\">\n            <form class=\"navbar-form navbar-left\">\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"refresh()\" [ngClass]=\"{disabled: refresing}\">Refresh</button>\n                <span class=\"label label-default\">{{repo}}</span>\n                <!--<span class=\"label label-default\">{{settingsService.repo}}</span>-->\n            </form>\n            \n            <!--\n            <form class=\"navbar-form navbar-right\">\n                <div class=\"input-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Search for Features\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-default\" type=\"button\">Go!</button>\n                    </span>\n                </div>\n            </form>\n            --> \n      \n        </div>\n    </nav>\n\n    <div class=\"col-lg-6 col-md-6 col-sm-6\">\n        <div class=\"panel panel-default\">\n            <!-- Default panel contents -->\n            <!--<div class=\"panel-heading\">Features</div>-->\n            \n            <div class=\"panel-body\">\n                <div class=\"input-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Search for Features\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-default\" type=\"button\">Go!</button>\n                    </span>\n                </div>\n            </div>\n\n            <!-- Table -->\n            <table class=\"table\">\n                <tr><th>#</th><th>Name</th><th>Description</th></tr>\n                <tr *ngFor=\"#item of features; #i = index\"><td>{{i}}</td><td>{{item != null ? item.name : 'null'}}</td><td>{{item != null ? item.description : 'null'}}</td></tr>\n            </table>\n        </div>\n    </div>\n    \n    <div class=\"col-lg-6 col-md-6 col-sm-6\">\n        <div class=\"panel panel-default\">\n            <div class=\"panel-body\">\n                <div class=\"input-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Search for Feature Version\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-default\" type=\"button\">Go!</button>\n                    </span>\n                </div>\n            </div>\n\n            <table class=\"table\">\n                <tr><th>#</th><th>Version</th><th>Description</th></tr>\n                \n            </table>\n        </div>\n    </div>\n    "
+                        template: "\n    <nav class=\"navbar-fixed-bottom navbar navbar-default\" role=\"navigation\">\n        <div class=\"container-fluid\">\n            <form (ngSubmit)=\"refresh()\" class=\"navbar-form navbar-left\">\n                <!--<span class=\"label label-default\">{{repo}}</span>-->\n                <!--<span class=\"label label-default\">{{settingsService.repo}}</span>-->\n                <div class=\"input-group\">\n                    <span class=\"input-group-addon\">{{settingsService.repo}}</span>\n                    <input type=\"text\" class=\"form-control\" [(ngModel)]=\"featuresUrl\" required>\n                    <span class=\"input-group-addon\">/&lt;name&gt;/&lt;version&gt;/</span>\n                    <div class=\"input-group-btn\">\n                        <!--<button class=\"btn btn-default\" type=\"submit\" [disabled]=\"featuresUrl == settingsService.feature\">&nbsp;<span class=\"glyphicon glyphicon-floppy-disk\"></span>&nbsp;</button>-->\n                        <button class=\"btn btn-default\" type=\"submit\" [disabled]=\"refreshing\">&nbsp;<span class=\"glyphicon glyphicon-refresh\"></span>&nbsp;</button>\n                    </div>\n                </div>\n                \n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"refresh()\" [disabled]=\"refreshing\" [ngClass]=\"{disabled: refreshing}\">Refresh</button>\n            </form>\n            \n            <!--\n            <form class=\"navbar-form navbar-right\">\n                <div class=\"input-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Search for Features\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-default\" type=\"button\">Go!</button>\n                    </span>\n                </div>\n            </form>\n            --> \n      \n        </div>\n    </nav>\n\n    <div class=\"alert alert-danger\" role=\"alert\" *ngIf=\"errorMessage\">\n        <span class=\"glyphicon glyphicon-exclamation-sign\"></span>\n        <span class=\"sr-only\">Error:</span> <span >{{errorMessage}}</span>\n    </div>\n\n    <div class=\"progress\" *ngIf=\"refreshing\">\n        <div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" style=\"width: 100%\">\n            <span class=\"sr-only\"></span>\n        </div>\n    </div>\n\n    <div class=\"col-lg-6 col-md-6 col-sm-6\">\n        <div class=\"panel panel-default\">\n            <!-- Default panel contents -->\n            <!--<div class=\"panel-heading\">Features</div>-->\n            \n            <div class=\"panel-body\">\n                <div class=\"input-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Search for Features\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-default\" type=\"button\">Go!</button>\n                    </span>\n                </div>\n            </div>\n\n            <!-- Table -->\n            <table class=\"table\">\n                <tr><th>#</th><th>Name</th><th>Description</th></tr>\n                <tr *ngFor=\"#item of features; #i = index\"><td>{{i}}</td><td>{{item != null ? item.name : 'null'}}</td><td>{{item != null ? item.description : 'null'}}</td></tr>\n            </table>\n        </div>\n    </div>\n    \n    <div class=\"col-lg-6 col-md-6 col-sm-6\">\n        <div class=\"panel panel-default\">\n            <div class=\"panel-body\">\n                <div class=\"input-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Search for Feature Version\">\n                    <span class=\"input-group-btn\">\n                        <button class=\"btn btn-default\" type=\"button\">Go!</button>\n                    </span>\n                </div>\n            </div>\n\n            <table class=\"table\">\n                <tr><th>#</th><th>Version</th><th>Description</th></tr>\n                \n            </table>\n        </div>\n    </div>\n    "
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [settings_service_1.SettingsService, http_1.Http])
                 ], FeaturesComponent);
                 return FeaturesComponent;
             }());
