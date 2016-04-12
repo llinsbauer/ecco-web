@@ -255,6 +255,10 @@ export class ArtifactsGraphComponent implements CanReuse {
             .attr("class", "node")
             .call(force.drag);
 
+        graph.nodes.forEach(element => {
+            color(element.associationId);
+        });
+
         var circle = node.append("circle")
             .attr("r", function(node: Node) { return 5 + node.numArtifacts / graph.maxNumArtifacts * 50; });
 
@@ -279,6 +283,30 @@ export class ArtifactsGraphComponent implements CanReuse {
             node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         });
 
+
+        // legend
+        var legendRectSize = 10;
+        var legendSpacing = 4;
+        var legend = svg.selectAll('.legend')
+            .data(color.domain())
+            .enter()
+            .append('g')
+            .attr('class', 'legend')
+            .attr('transform', function(d, i) {
+                var height = legendRectSize + legendSpacing;
+                var horz = legendRectSize;
+                var vert = i * height + 5;
+                return 'translate(' + horz + ',' + vert + ')';
+            });
+        legend.append('rect')
+            .attr('width', legendRectSize)
+            .attr('height', legendRectSize)
+            .style('fill', color)
+            .style('stroke', color);
+        legend.append('text')
+            .attr('x', legendRectSize + legendSpacing)
+            .attr('y', legendRectSize - legendSpacing)
+            .text(function(d) { return d; });
     }
 
 }
