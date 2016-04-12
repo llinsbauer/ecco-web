@@ -163,6 +163,9 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_
                         .append("g")
                         .attr("class", "node")
                         .call(force.drag);
+                    graph.nodes.forEach(function (element) {
+                        color(element.associationId);
+                    });
                     var circle = node.append("circle")
                         .attr("r", function (node) { return 5 + node.numArtifacts / graph.maxNumArtifacts * 50; });
                     circle.append("title")
@@ -182,6 +185,29 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Rx'], function(exports_
                             .attr("y2", function (d) { return d.target.y; });
                         node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
                     });
+                    // legend
+                    var legendRectSize = 10;
+                    var legendSpacing = 4;
+                    var legend = svg.selectAll('.legend')
+                        .data(color.domain())
+                        .enter()
+                        .append('g')
+                        .attr('class', 'legend')
+                        .attr('transform', function (d, i) {
+                        var height = legendRectSize + legendSpacing;
+                        var horz = legendRectSize;
+                        var vert = i * height + 5;
+                        return 'translate(' + horz + ',' + vert + ')';
+                    });
+                    legend.append('rect')
+                        .attr('width', legendRectSize)
+                        .attr('height', legendRectSize)
+                        .style('fill', color)
+                        .style('stroke', color);
+                    legend.append('text')
+                        .attr('x', legendRectSize + legendSpacing)
+                        .attr('y', legendRectSize - legendSpacing)
+                        .text(function (d) { return d; });
                 };
                 __decorate([
                     core_1.ViewChild('artifactsgraphview'), 
