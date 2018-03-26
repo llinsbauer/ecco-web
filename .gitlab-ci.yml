@@ -1,0 +1,63 @@
+variables:
+  GIT_DEPTH: "3"
+
+  CSS: "css"
+  JS: "js"
+  REPO: "repo"
+  TSBUILD: "tsbuild"
+  INDEX: "index.html"
+
+
+stages:
+  - build
+  - test
+  - deploy
+
+
+build:ubuntu:
+  stage: build
+  image: $CI_REGISTRY_IMAGE/build:ubuntu
+  script:
+    - cd $CI_PROJECT_DIR
+    - npm install
+    - npm run tsc
+  when: on_success
+  allow_failure: false
+  artifacts:
+    paths:
+      - $CSS
+      - $JS
+      - $REPO
+      - $TSBUILD
+      - $INDEX
+
+
+pages:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  image: alpine:latest
+  script:
+    - cd $CI_PROJECT_DIR
+    - pwd
+    - ls -la
+    - mkdir public/
+    - cp -r $CSS public/
+    - cp -r $JS public/
+    - cp -r $REPO public/
+    - cp -r $TSBUILD public/
+    - cp $INDEX public/
+    - cd public
+    - pwd
+    - ls -la
+  when: on_success
+  allow_failure: false
+  dependencies:
+    - build:ubuntu
+  artifacts:
+    paths:
+      - public/
+  environment:
+    name: ecco-web
+    url: https://llinsbauer.gitlab.io/ecco-web/
+
