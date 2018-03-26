@@ -1,0 +1,9 @@
+FROM ubuntu:latest
+
+RUN apt-get -y update && \
+  apt-get -y install \
+  nodejs nodejs-legacy npm && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/* && \
+  rm -rf /var/log/journal/* && \
+  rm -rf /var/cache/abrt-di/*
