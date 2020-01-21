@@ -21,10 +21,10 @@ jobs:
           cp -r repo public/
           cp -r tsbuild public/
           cp index.html public/
+          zip -r public.zip public
           cd public
           pwd
           ls -la
-          zip -r public.zip public
       - uses: actions/upload-artifact@v1
         with:
           name: public
