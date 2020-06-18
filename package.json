@@ -1,28 +1,24 @@
 {
   "name": "ecco-web",
   "version": "0.0.1",
-  "scripts": {
-    "start": "concurrently \"npm run tsc:w\" \"npm run lite\" ",
-    "tsc": "tsc --outDir tsbuild",
-    "tsc:w": "tsc -w --outDir tsbuild",
-    "lite": "lite-server",
-    "typings": "typings",
-    "postinstall": "typings install"
-  },
   "license": "ISC",
   "dependencies": {
-    "angular2": "2.0.0-beta.11",
-    "systemjs": "0.19.24",
-    "es6-promise": "^3.0.2",
-    "es6-shim": "^0.35.0",
-    "reflect-metadata": "0.1.2",
-    "rxjs": "5.0.0-beta.2",
-    "zone.js": "0.6.4"
+    "express": "^4.17.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "scripts": {
+    "dev": "webpack --config webpack.config.js --mode development --watch",
+    "prod": "webpack --config webpack.config.js --mode production",
+    "server": "node nodeServer.js"
   },
   "devDependencies": {
-    "concurrently": "^2.0.0",
-    "lite-server": "^2.1.0",
-    "typescript": "^1.8.10",
-    "typings":"^1.0.4"
+    "@types/react": "^16.9.38",
+    "@types/react-dom": "^16.9.8",
+    "source-map-loader": "^1.0.0",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
   }
 }

@@ -1,116 +1,17 @@
-<html>
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello React!</title>
+    </head>
+    <body>
+        <div id="example"></div>
 
-<head>
-    <title>ECCO Web</title>
-    <base href="/ecco-web/">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/styles.css">
+        <!-- Dependencies -->
+        <script src="./node_modules/react/umd/react.development.js"></script>
+        <script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
 
-
-
-    <!-- Bootstrap: Latest compiled and minified CSS -->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-	crossorigin="anonymous">-->
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
-    <!-- Bootstrap: Optional theme -->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
-	crossorigin="anonymous">-->
-    <link rel="stylesheet" href="css/bootstrap/bootstrap-theme.min.css">
-
-    <!-- Bootstrap: Custom theme: Flatly -->
-    <!--<link rel="stylesheet" href="css/bootstrap.flatly.min.css">-->
-
-    <!-- Bootstrap Material Design -->
-    <!-- Material Design Fonts -->
-    <!--
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons">
-    -->
-    <!-- Bootstrap Material Design -->
-    <!--
-    <link rel="stylesheet" type="text/css" href="css/material/bootstrap-material-design.min.css">
-    <link rel="stylesheet" type="text/css" href="css/material/ripples.min.css">
-    -->
-
-
-
-    <!-- jQuery -->
-    <!--<script src="//code.jquery.com/jquery-2.2.2.min.js"></script>-->
-    <script src="js/jquery-2.2.2.min.js"></script>
-
-    <!-- Bootstrap: Latest compiled and minified JavaScript -->
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-	crossorigin="anonymous"></script>-->
-    <script src="js/bootstrap/bootstrap.min.js"></script>
-
-    <!-- Bootstrap Material Design -->
-    <!--
-    <script src="js/material/ripples.min.js"></script>
-    <script src="js/material/material.min.js"></script>
-    -->
-
-
-
-    <!-- d3 -->
-    <script src="js/d3/d3.min.js"></script>
-
-
-    <!-- Angular: Load libraries -->
-    <script src="js/angular2/angular2-polyfills.js"></script>
-    <script src="js/systemjs/system.src.js"></script>
-    <script src="js/rxjs/Rx.js"></script>
-    <script src="js/angular2/angular2.dev.js"></script>
-    <script src="js/angular2/http.dev.js"></script>
-    <script src="js/angular2/router.dev.js"></script>
-    <!--
-    <script src="https://npmcdn.com/angular2@2.0.0-beta.0/bundles/angular2-polyfills.js"></script>
-    <script src="https://npmcdn.com/systemjs@0.19.8/dist/system.src.js"></script>
-    <script src="https://npmcdn.com/rxjs@5.0.0-beta.0/bundles/Rx.js"></script>
-    <script src="https://npmcdn.com/angular2@2.0.0-beta.0/bundles/angular2.dev.js"></script>
-    <script src="https://npmcdn.com/angular2@2.0.0-beta.0/bundles/http.dev.js"></script>
-    <script src="https://npmcdn.com/angular2@2.0.0-beta.0/bundles/router.dev.js"></script>
-    -->
-    <!--
-    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
-    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
-    <script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
-    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
-    <script src="node_modules/rxjs/bundles/Rx.js"></script>
-    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
-    <script src="node_modules/angular2/bundles/http.dev.js"></script>
-    -->
-
-
-    <!-- Angular: Configure SystemJS -->
-    <script>
-        System.config({
-        packages: {        
-          tsbuild: {
-            format: 'register',
-            defaultExtension: 'js'
-          }
-        }
-      });
-      System.import('tsbuild/main').then(null, console.error.bind(console));
-    </script>
-
-</head>
-
-<body>
-    <!--<ecco-main></ecco-main>-->
-    <main-router></main-router>
-
-
-    <!--
-    <script>
-        $(function () {
-            $.material.init();
-        });
-    </script>
-    -->
-
-</body>
-
+        <!-- Main -->
+        <script src="./dist/app.js"></script>
+    </body>
 </html>
