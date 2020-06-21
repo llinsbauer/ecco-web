@@ -1,13 +1,17 @@
 import * as React from "react";
+import { GlobalState, useSetState, useTrackedState } from "../../GlobalState";
 
-export interface ArtifactProps {}
+export const Artifact: React.FC = () => {
+    const myGlobalState: GlobalState = useTrackedState();
+    const setGlobalState: React.Dispatch<React.SetStateAction<GlobalState>> = useSetState();
 
-export class Artifact extends React.Component<ArtifactProps, {}> {
-    render() {
-        return (
-            <div className="col-12">
-                <p>Artifact-Component works...</p>
+    return (
+        <div className="col-12">
+            <h1>State-Analyse</h1>
+            <div className="row">
+                <div className="col-6">{ myGlobalState.repositoryDirectory }</div>
+                <div className="col-6">{ myGlobalState.repositoryIsInitialized }</div>
             </div>
-        );
-    }
+        </div>
+    );
 }

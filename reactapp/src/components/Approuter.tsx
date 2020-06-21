@@ -6,9 +6,9 @@ import {
     Route
 } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import {Feature} from "./Subpages/Feature";
-import {Artifact} from "./Subpages/Artifact";
-import {Home} from "./Home";
+import { Feature } from "./Subpages/Feature";
+import { Artifact } from "./Subpages/Artifact";
+import { Home } from "./Home";
 
 export interface RouterProps {}
 
@@ -26,7 +26,6 @@ export class Approuter extends React.Component<RouterProps, {}> {
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"/>
                     </button>
-
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item active">
