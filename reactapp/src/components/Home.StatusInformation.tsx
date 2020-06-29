@@ -5,7 +5,7 @@ import {ReducedArtifactPlugin} from "../Domain/Model/ReducedArtifactPlugin";
 
 export const StatusInformation : React.FC  = () => {
 
-    const REPO_DIRECTORY_PART = "./ecco";
+    const REPO_DIRECTORY_PART = "/.ecco";
     const PLUGIN_INFORMATION_ACCORDION_ID = "pluginInformationAccordion";
 
     const [appState, setAppState] = useSharedState();
@@ -19,7 +19,8 @@ export const StatusInformation : React.FC  = () => {
     }
 
     const statusInformationPlugins =
-        appState.plugins
+        appState
+            .plugins
             .map((plugin: ReducedArtifactPlugin) => {
                 const validArtifactID = plugin.pluginID.replace(/[^a-zA-Z0-9]/g, '');
                 return <StatusInformationPlugin key={validArtifactID} artifactPlugin={plugin} parentID={PLUGIN_INFORMATION_ACCORDION_ID} />

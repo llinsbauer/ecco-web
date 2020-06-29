@@ -14,7 +14,8 @@ export interface AppState {
     plugins: ReducedArtifactPlugin[]
     artifacts: ArtifactModel[],
     features: FeatureModel[],
-    eccoServiceIsInitialized: boolean
+    eccoServiceIsInitialized: boolean,
+    currentFeature: FeatureModel
 }
 
 const useValue = () => useState<AppState>({
@@ -31,7 +32,11 @@ const useValue = () => useState<AppState>({
     plugins: [
 
     ],
-    eccoServiceIsInitialized: false
+    eccoServiceIsInitialized: false,
+    currentFeature: {
+        description: null,
+        name: null
+    }
 });
 
 export const {

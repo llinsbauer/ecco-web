@@ -4,23 +4,15 @@ import {useEffect, useState} from "react";
 import { CommunicationService } from "../../services/CommunicationService";
 import { FeatureModel } from "../../Domain/Model/FeatureModel";
 import { FeatureResponse } from "../../Domain/Model/FeatureResponse";
-import { FeatureListItem } from "./Feature.ListItem";
+import { DetailFeatureView } from "./Feature.Detail";
 
 export const Feature : React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
+    const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(null);
 
     useEffect(() => {
-        console.log("Featuresbeschreibung wurden geupdatet...", appState.features);
-        CommunicationService.getInstance().updateFeaturesInBackend(appState.features).then((apiData: FeatureResponse) => {
-            console.log(apiData);
-        }).catch((error) => {
-            console.log(error);
-        }).finally(() => {
-        });
-    }, [[...appState.features].map((walkerFeature) => walkerFeature.description)]);
-
-    useEffect(() => {
+        console.log("Request geht raus, um die updated Features zu bekommen...");
         CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
             setAppState((previousState) => ({
                 ...previousState,
@@ -29,16 +21,31 @@ export const Feature : React.FC = () => {
         }).catch((error : any) => {
             console.log(error)
         }).finally(() => {
+
         });
     }, []);
+
     const features = appState.features.map((feature: FeatureModel) => {
-        return <FeatureListItem key={feature.name} feature={feature} />
+        let setCurrentFeature = () => {
+            setTmpCurrentFeature(feature);
+        }
+
+        return (
+            <a key={feature.name} onClick={setCurrentFeature} className={"list-group-item list-group-item-action"} >
+                {feature.name}
+            </a>
+        );
     });
 
     return (
         <div className="col-12">
             <div className="row">
-                {features}
+                <div className="col-6">
+                    <div className="list-group">
+                        {features}
+                    </div>
+                </div>
+                {tmpCurrentFeature == null ? "" : <DetailFeatureView currentSelectedFeatureModel={tmpCurrentFeature} />}
             </div>
         </div>
     )

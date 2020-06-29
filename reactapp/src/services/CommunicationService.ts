@@ -25,14 +25,14 @@ export class CommunicationService {
         return this.communicationServiceInstance;
     }
 
-    public updateFeaturesInBackend(featureModels: FeatureModel[]): Promise<any> {
+    public updateFeatureInBackend(updatedFeatureModel: FeatureModel): Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
         };
         return axios.post(
             `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}`,
-            JSON.stringify(featureModels),
+            JSON.stringify(updatedFeatureModel),
             config
         )
     }
