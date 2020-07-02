@@ -12,7 +12,6 @@ export const Feature : React.FC = () => {
     const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(null);
 
     useEffect(() => {
-        console.log("Request geht raus, um die updated Features zu bekommen...");
         CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
             setAppState((previousState) => ({
                 ...previousState,

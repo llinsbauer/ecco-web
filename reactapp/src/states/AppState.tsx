@@ -4,6 +4,7 @@ import { createContainer } from "react-tracked";
 import { ReducedArtifactPlugin } from "../Domain/Model/ReducedArtifactPlugin";
 import { FeatureModel } from "../Domain/Model/FeatureModel";
 import { ArtifactModel } from "../Domain/Model/ArtifactModel";
+import {AssociationModel} from "../Domain/Model/AssociationModel";
 
 //repoOperation wird nur ein String sein, der beim Bestätigen der jeweligen Button mit dem richtigen String befüllt wird
 //Und bei einer State-Änderung wird die dementsprechende Operation des States mit Hilfe eines Calls an die API gesendet...
@@ -14,7 +15,10 @@ export interface AppState {
     plugins: ReducedArtifactPlugin[]
     artifacts: ArtifactModel[],
     features: FeatureModel[],
+    associations: AssociationModel[],
     eccoServiceIsInitialized: boolean,
+    //Das hier eventuell wegnehmen, das kannst du dir am Wochenende anschauen...
+    ///Eventuell wirklich in dem Appstate nur alle Listen speichern...
     currentFeature: FeatureModel
 }
 
@@ -27,6 +31,9 @@ const useValue = () => useState<AppState>({
     ],
     //Wird nur von der Features-Component bedient
     features: [
+
+    ],
+    associations: [
 
     ],
     plugins: [

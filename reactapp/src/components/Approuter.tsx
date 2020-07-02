@@ -10,6 +10,7 @@ import { Feature } from "./Subpages/Feature";
 import { Artifact } from "./Subpages/Artifact";
 import { Home } from "./Home";
 import { useSharedState } from "../states/AppState";
+import {Association} from "./Subpages/Association";
 
 const history = createBrowserHistory();
 
@@ -39,6 +40,9 @@ export const Approuter : React.FC = () => {
                         <li className="nav-item dropdown">
                             <Link className={"nav-link " + (!appState.eccoServiceIsInitialized ? disabledCSSClass : "")} to="/artifacts">Artifacts</Link>
                         </li>
+                        <li className="nav-item dropdown">
+                            <Link className={"nav-link " + (!appState.eccoServiceIsInitialized ? disabledCSSClass : "")} to="/associations">Associations</Link>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -51,6 +55,9 @@ export const Approuter : React.FC = () => {
                 </Route>
                 <Route path="/artifacts">
                     <Artifact />
+                </Route>
+                <Route path="/associations">
+                    <Association />
                 </Route>
             </Switch>
         </Router>

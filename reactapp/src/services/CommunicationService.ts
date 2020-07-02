@@ -1,6 +1,7 @@
 import { OperationContainer } from "../Domain/Model/OperationContainer";
 import { RequestConfig } from "../Domain/Model/RequestConfig";
 import { FeatureModel } from "../Domain/Model/FeatureModel";
+import {FeatureVersionModel} from "../Domain/Model/FeatureVersionModel";
 
 const axios = require("axios");
 
@@ -10,6 +11,7 @@ export class CommunicationService {
     private static readonly FEATURE_ENDPOINT = "/features";
     private static readonly ARTIFACT_ENDPOINT = "/artifacts";
     private static readonly REPOSITORY_ENDPOINT = "/repository";
+    private static readonly ASSOCIATIONS_ENDPOINT = "/associations";
     private static readonly ECCO_DIRECTORY = "/.ecco";
 
     private static communicationServiceInstance: CommunicationService;
@@ -23,6 +25,36 @@ export class CommunicationService {
             this.communicationServiceInstance = new CommunicationService();
         }
         return this.communicationServiceInstance;
+    }
+
+    public getAssociations() : Promise<any> {
+        return axios.get(
+            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT}`,
+        )
+    }
+
+    public updateFeatureversionFromFeature(currentFeatureModel: FeatureModel, updatedFeatureVersionModel: FeatureVersionModel) : Promise<any>  {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'application/json',
+        };
+        currentFeatureModel.name
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.name}/version`,
+            JSON.stringify(updatedFeatureVersionModel),
+            config
+        )
+    }
+
+    public getFeatureversionsFromFeature(currentFeatureModel: FeatureModel) : Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'application/json',
+        };
+        return axios.get(
+            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.name}/version`,
+            config
+        )
     }
 
     public updateFeatureInBackend(updatedFeatureModel: FeatureModel): Promise<any> {
