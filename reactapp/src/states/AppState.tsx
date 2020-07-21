@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useState } from "react";
 import { createContainer } from "react-tracked";
-import { ReducedArtifactPlugin } from "../Domain/Model/ReducedArtifactPlugin";
-import { FeatureModel } from "../Domain/Model/FeatureModel";
-import { ArtifactModel } from "../Domain/Model/ArtifactModel";
-import {AssociationModel} from "../Domain/Model/AssociationModel";
+import { ReducedArtifactPlugin } from "../Domain/Model/Backend/ReducedArtifactPlugin";
+import { FeatureModel } from "../Domain/Model/Backend/FeatureModel";
+import { AssociationInspection } from "../Domain/Model/Frontend/AssociationInspection";
+import { ArtefactTreeModel } from "../Domain/Model/Backend/ArtefactTreeModel";
 
 //repoOperation wird nur ein String sein, der beim Bestätigen der jeweligen Button mit dem richtigen String befüllt wird
 //Und bei einer State-Änderung wird die dementsprechende Operation des States mit Hilfe eines Calls an die API gesendet...
@@ -13,9 +13,9 @@ export interface AppState {
     directory: string,
     repoOperation: string,
     plugins: ReducedArtifactPlugin[]
-    artifacts: ArtifactModel[],
+    artifactTree: ArtefactTreeModel,
     features: FeatureModel[],
-    associations: AssociationModel[],
+    associations: AssociationInspection[],
     eccoServiceIsInitialized: boolean,
     //Das hier eventuell wegnehmen, das kannst du dir am Wochenende anschauen...
     ///Eventuell wirklich in dem Appstate nur alle Listen speichern...
@@ -26,9 +26,7 @@ const useValue = () => useState<AppState>({
     directory: "",
     repoOperation: "",
     //Wird nur von der Artifacts-Component bedient
-    artifacts: [
-
-    ],
+    artifactTree: null,
     //Wird nur von der Features-Component bedient
     features: [
 

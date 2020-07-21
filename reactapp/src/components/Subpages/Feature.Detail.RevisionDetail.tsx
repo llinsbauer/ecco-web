@@ -1,9 +1,9 @@
 import * as React from "react";
 import {useState} from "react";
-import {FeatureModel} from "../../Domain/Model/FeatureModel";
+import {FeatureModel} from "../../Domain/Model/Backend/FeatureModel";
 import {CommunicationService} from "../../services/CommunicationService";
-import {FeatureVersionModel} from "../../Domain/Model/FeatureVersionModel";
-import {FeatureVersionResponse} from "../../Domain/Model/FeatureVersionResponse";
+import {FeatureVersionModel} from "../../Domain/Model/Backend/FeatureVersionModel";
+import {FeatureVersionResponse} from "../../Domain/Model/Backend/FeatureVersionResponse";
 
 interface FeatureDetailRevisionDetailProps {
     currentFeatureRevision: FeatureVersionModel

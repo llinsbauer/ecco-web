@@ -1,9 +1,10 @@
 import * as React from "react";
 import {useEffect} from "react";
 import {CommunicationService} from "../../services/CommunicationService";
-import {AssociationResponse} from "../../Domain/Model/AssociationResponse";
+import {AssociationResponse} from "../../Domain/Model/Backend/AssociationResponse";
 import {AppState, useSharedState} from "../../states/AppState";
-import {AssociationModel} from "../../Domain/Model/AssociationModel";
+import {AssociationModel} from "../../Domain/Model/Backend/AssociationModel";
+import {AssociationInspection} from "../../Domain/Model/Frontend/AssociationInspection";
 
 export const Association: React.FC = () => {
 
@@ -11,16 +12,20 @@ export const Association: React.FC = () => {
 
     useEffect(() => {
         CommunicationService.getInstance().getAssociations().then((associationResponse: AssociationResponse) => {
+            let selectableAssociations: AssociationInspection[] = [];
+            associationResponse.data.forEach((tmpAssociation: AssociationModel, index: number) => {
+                selectableAssociations[index] = new AssociationInspection(tmpAssociation);
+            });
             setAppState((previousState: AppState) => ({
                 ...previousState,
-                associations: associationResponse.data
+                associations: selectableAssociations
             }));
         });
     }, []);
 
-    const associations = appState.associations.map((association: AssociationModel) => {
+    const associations = appState.associations.map((association: AssociationInspection) => {
 
-        let validHTMLID = "validid" + association.association;
+        let validHTMLID = "validid" + association.selectableAssociation.association;
 
         return (
             <div key={validHTMLID} className="card">
@@ -28,7 +33,7 @@ export const Association: React.FC = () => {
                     <h2 className="mb-0">
                         <button className="btn btn-link btn-block text-center collapsed" type="button"
                                 data-toggle="collapse" data-target={"#" + validHTMLID}>
-                            {association.associationID}
+                            {association.selectableAssociation.association}
                         </button>
                     </h2>
                 </div>
@@ -38,15 +43,15 @@ export const Association: React.FC = () => {
                         <div className="row">
                             <div className="col-12">
                                 <p>AssocationID</p>
-                                <p>{association.association}</p>
+                                <p>{association.selectableAssociation.association}</p>
                             </div>
                             <div className="col-12">
                                 <p>simpleModuleCondition</p>
-                                <p>{association.simpleModuleCondition}</p>
+                                <p>{association.selectableAssociation.simpleModuleCondition}</p>
                             </div>
                             <div className="col-12">
                                 <p>simpleModuleRevisionCondition</p>
-                                <p>{association.simpleModuleRevisionCondition}</p>
+                                <p>{association.selectableAssociation.simpleModuleRevisionCondition}</p>
                             </div>
                         </div>
                     </div>

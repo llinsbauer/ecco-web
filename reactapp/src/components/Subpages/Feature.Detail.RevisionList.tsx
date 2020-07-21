@@ -1,9 +1,9 @@
 import * as React from "react";
-import {FeatureModel} from "../../Domain/Model/FeatureModel";
+import {FeatureModel} from "../../Domain/Model/Backend/FeatureModel";
 import {useEffect, useState} from "react";
-import {FeatureVersionModel} from "../../Domain/Model/FeatureVersionModel";
+import {FeatureVersionModel} from "../../Domain/Model/Backend/FeatureVersionModel";
 import {CommunicationService} from "../../services/CommunicationService";
-import {FeatureVersionResponse} from "../../Domain/Model/FeatureVersionResponse";
+import {FeatureVersionResponse} from "../../Domain/Model/Backend/FeatureVersionResponse";
 import {FeatureSpecificRevisionDetail} from "./Feature.Detail.RevisionDetail";
 
 

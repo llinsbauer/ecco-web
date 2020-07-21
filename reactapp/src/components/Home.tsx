@@ -4,7 +4,7 @@ import { AppState, useSharedState } from "../states/AppState";
 import { CommunicationService } from "../services/CommunicationService";
 import { HomeInitialization } from "./Home.Initialization";
 import { StatusInformation } from "./Home.StatusInformation";
-import { OperationResponse } from "../Domain/Model/OperationResponse";
+import { OperationResponse } from "../Domain/Model/Backend/OperationResponse";
 
 export const Home : React.FC = () => {
 
@@ -13,7 +13,6 @@ export const Home : React.FC = () => {
     useEffect(() => {
         if (appState.directory != "" && appState.repoOperation != "") {
             CommunicationService.getInstance().doOpenCloseRepositoryWithDirectory(appState.directory, appState.repoOperation).then((apiData: OperationResponse) => {
-                console.log(apiData);
                 setAppState((previousState: AppState) => ({
                     ...previousState,
                     eccoServiceIsInitialized: apiData.data.eccoServiceIsInitialized,

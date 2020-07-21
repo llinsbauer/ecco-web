@@ -1,7 +1,12 @@
 import * as React from "react";
 import { AppState, useSharedState } from "../states/AppState";
 import {StatusInformationPlugin} from "./Home.StatusInformation.Plugins";
-import {ReducedArtifactPlugin} from "../Domain/Model/ReducedArtifactPlugin";
+import {ReducedArtifactPlugin} from "../Domain/Model/Backend/ReducedArtifactPlugin";
+import {useEffect} from "react";
+import {ArtifactsPerAssociation} from "./Charts/Home.ArtifactsPerAssociation";
+import {ModulesPerOrder} from "./Charts/Home.ModulesPerOrder";
+import {ArtifactsPerDepth} from "./Charts/Home.ArtifactsPerDepth";
+import {RevisionPerFeature} from "./Charts/Home.RevisionPerFeature";
 
 export const StatusInformation : React.FC  = () => {
 
@@ -10,8 +15,11 @@ export const StatusInformation : React.FC  = () => {
 
     const [appState, setAppState] = useSharedState();
 
+    useEffect(() => {
+        //Assoziationen callen und eigene JS-Objekte bauen...
+    });
+
     const closeRepositoryOperation = () => {
-        console.log("Funktioniere!!!");
         setAppState((previousState: AppState) => ({
             ...previousState,
             repoOperation: "CLOSE"
@@ -28,7 +36,7 @@ export const StatusInformation : React.FC  = () => {
 
     return (
         <div className="col-12">
-            <div className="row">
+            <div className="row mb-3">
                 <div className="col-6">
                     <div className="card">
                         <div className="card-header">
@@ -50,6 +58,34 @@ export const StatusInformation : React.FC  = () => {
                 <div className="col-6">
                     <div className="accordion" id={PLUGIN_INFORMATION_ACCORDION_ID}>
                         {statusInformationPlugins}
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="artifactsperassociation">
+                        <ArtifactsPerAssociation />
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="modulesperorder">
+                        <ModulesPerOrder />
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="artifactsperdepth">
+                        <ArtifactsPerDepth />
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="revisionperfeature">
+                        <RevisionPerFeature />
                     </div>
                 </div>
             </div>

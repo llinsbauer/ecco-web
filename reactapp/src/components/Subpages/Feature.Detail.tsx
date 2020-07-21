@@ -1,9 +1,9 @@
 import * as React from "react";
 import { AppState, useSharedState } from "../../states/AppState";
 import {useEffect, useState} from "react";
-import { FeatureModel } from "../../Domain/Model/FeatureModel";
+import { FeatureModel } from "../../Domain/Model/Backend/FeatureModel";
 import {CommunicationService} from "../../services/CommunicationService";
-import {FeatureResponse} from "../../Domain/Model/FeatureResponse";
+import {FeatureResponse} from "../../Domain/Model/Backend/FeatureResponse";
 import {FeatureSpecificRevisionList} from "./Feature.Detail.RevisionList";
 
 interface DetailViewProps {

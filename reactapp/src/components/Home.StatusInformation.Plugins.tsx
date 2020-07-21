@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ReducedArtifactPlugin} from "../Domain/Model/ReducedArtifactPlugin";
+import {ReducedArtifactPlugin} from "../Domain/Model/Backend/ReducedArtifactPlugin";
 
 interface AccordionProperties {
     artifactPlugin: ReducedArtifactPlugin,

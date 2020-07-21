@@ -1,0 +1,7 @@
+@import "nested-dropdown/nestedDropdown";
+
+.rotate {
+  &-90 {
+    transform: rotate(90deg);
+  }
+}
