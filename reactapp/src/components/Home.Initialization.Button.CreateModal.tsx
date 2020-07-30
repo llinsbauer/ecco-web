@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AppState, useSharedState } from "../states/AppState";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 
 
 interface ModalContainer {
@@ -11,7 +11,12 @@ export const CreateModal : React.FC<ModalContainer> = ({modelID}) => {
 
     let jQueryHTMLIdentifier = "#" + modelID;
 
+    let [inputValue, setInputValue] = useState("/media/marc/UbuntuData/EccoCREATEREPO");
     let [appState, setAppState] = useSharedState();
+
+    const setValueInAppState = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(event.target.value);
+    };
 
     let onModalDismiss = () => {
         $(jQueryHTMLIdentifier).modal("hide");
@@ -29,6 +34,17 @@ export const CreateModal : React.FC<ModalContainer> = ({modelID}) => {
         });
     }, [appState.repoOperation]);
 
+    const saveDataInAppState = () => {
+        $(jQueryHTMLIdentifier).modal("hide");
+        $(jQueryHTMLIdentifier).on("hidden.bs.modal", () => {
+            $(jQueryHTMLIdentifier).modal("dispose");
+            setAppState((prevState: AppState) => ({
+                ...prevState,
+                directory: inputValue,
+                repoOperation: "CREATE"
+            }));
+        });
+    }
 
     return (
         <div className="modal fade" id={modelID} tabIndex={-1} role="dialog" aria-hidden="true">
@@ -41,11 +57,23 @@ export const CreateModal : React.FC<ModalContainer> = ({modelID}) => {
                         </button>
                     </div>
                     <div className="modal-body">
-                        Create New Repo...
+                        <form>
+                            <div className="form-row">
+                                <div className="col-12">
+                                    <label htmlFor="baseDirectoryOpenRepo">Base Directory</label>
+                                    <input id={"baseDirectoryOpenRepo"}
+                                           className={"form-control"}
+                                           placeholder={"Base Directory to Repository..."}
+                                           value={inputValue}
+                                           type="text"
+                                           onChange={setValueInAppState}/>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div className="modal-footer d-flex justify-content-between">
                         <button type="button" onClick={onModalDismiss} className="btn btn-danger">Close</button>
-                        <button type="button" className="btn btn-success">Create Repository</button>
+                        <button type="button" onClick={saveDataInAppState} className="btn btn-success">Create Repository</button>
                     </div>
                 </div>
             </div>

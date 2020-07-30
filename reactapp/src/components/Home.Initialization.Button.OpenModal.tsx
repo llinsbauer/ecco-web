@@ -8,7 +8,7 @@ interface ModalContainer {
 
 export const OpenModal : React.FC<ModalContainer> = ({modalID}) => {
 
-    let [inputValue, setInputValue] = useState("/home/marc/TestRepoForEcco/Repo2");
+    let [inputValue, setInputValue] = useState("/media/marc/UbuntuData/EccoRepoTest");
     let [appState, setAppState] = useSharedState();
 
     let jQueryHTMLIdentifier = "#" + modalID;

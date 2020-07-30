@@ -14,16 +14,33 @@ export class CommunicationService {
     private static readonly ARTIFACT_ENDPOINT = "/artefacts";
     private static readonly REPOSITORY_ENDPOINT = "/repository";
     private static readonly ASSOCIATIONS_ENDPOINT = "/associations";
-    private static readonly NUMBER_OF_ARTIFACTS_PER_ASSOCIATION = "/numberofartifacts";
-    private static readonly NUMBER_OF_ARTIFACTS_PER_DEPTH = "/artifactsperdepth";
-    private static readonly NUMBER_OF_REVISIONS_PER_FEATURE = "/numberofrevisions";
-    private static readonly NUMBER_OF_MODULES_PER_ORDER = "/modulesperorder";
+    private static readonly COMMIT_FILES_INSIDE_ZIP_FILE = "/commit";
+    private static readonly NUMBER_OF_ARTIFACTS_PER_ASSOCIATION_IN_ASSOCIATION_ENDPOINT = "/numberofartifacts";
+    private static readonly NUMBER_OF_ARTIFACTS_PER_DEPTH_IN_ASSOCIATION_ENDPOINT = "/artifactsperdepth";
+    private static readonly NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT = "/numberofrevisions";
+    private static readonly NUMBER_OF_MODULES_PER_ORDER_IN_ASSOCIATION_ENDPOINT = "/modulesperorder";
     private static readonly ECCO_DIRECTORY = "/.ecco";
 
     private static communicationServiceInstance: CommunicationService;
 
     private constructor() {
 
+    }
+
+    public commitFilesInsideZIPFile = (acceptedFiles: File[]) => {
+        let formData = new FormData();
+        let config = new RequestConfig();
+        acceptedFiles.forEach((tmpFile: File) => {
+            formData.append("file", tmpFile, tmpFile.name);
+        });
+        config.headers = {
+            'Content-Type': 'multipart/form-data'
+        }
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.COMMIT_FILES_INSIDE_ZIP_FILE}`,
+            formData,
+            config
+        )
     }
 
     public getArtifactgraph() : Promise<any> {
@@ -34,25 +51,25 @@ export class CommunicationService {
 
     public getNumberOfModules() : Promise<any> {
         return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_MODULES_PER_ORDER}`
+            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_MODULES_PER_ORDER_IN_ASSOCIATION_ENDPOINT}`
         )
     }
 
     public getNumberOfRevisionsPerFeature() : Promise<any> {
         return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT + CommunicationService.NUMBER_OF_REVISIONS_PER_FEATURE}`
+            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT + CommunicationService.NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT}`
         )
     }
 
     public getNumberOfArtifactsPerDepth() : Promise<any> {
         return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_ARTIFACTS_PER_DEPTH}`
+            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_ARTIFACTS_PER_DEPTH_IN_ASSOCIATION_ENDPOINT}`
         )
     }
 
     public getNumberOfArtifactsPerAssociation() : Promise<any> {
         return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_ARTIFACTS_PER_ASSOCIATION}`
+            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_ARTIFACTS_PER_ASSOCIATION_IN_ASSOCIATION_ENDPOINT}`
         )
     }
 
@@ -118,7 +135,7 @@ export class CommunicationService {
         };
         let operationContainer = new OperationContainer();
         operationContainer.repositoryOperation = openCloseRepositoryOperation;
-        operationContainer.repositoryDirectory = baseDirectory + CommunicationService.ECCO_DIRECTORY
+        operationContainer.baseDirectory = baseDirectory;
         return axios.post(
             `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}`,
             JSON.stringify(operationContainer),

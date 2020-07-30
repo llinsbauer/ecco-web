@@ -1,4 +1,5 @@
 export class OperationContainer {
-    public repositoryDirectory: string;
+    public baseDirectory: string;
     public repositoryOperation: string;
 }
+
