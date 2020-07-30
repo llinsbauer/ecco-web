@@ -7,6 +7,7 @@ import {ArtifactsPerAssociation} from "./Charts/Home.ArtifactsPerAssociation";
 import {ModulesPerOrder} from "./Charts/Home.ModulesPerOrder";
 import {ArtifactsPerDepth} from "./Charts/Home.ArtifactsPerDepth";
 import {RevisionPerFeature} from "./Charts/Home.RevisionPerFeature";
+import {MyDropzone} from "./Home.StatusInformation.Dropzone";
 
 export const StatusInformation : React.FC  = () => {
 
@@ -59,6 +60,11 @@ export const StatusInformation : React.FC  = () => {
                     <div className="accordion" id={PLUGIN_INFORMATION_ACCORDION_ID}>
                         {statusInformationPlugins}
                     </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <MyDropzone />
                 </div>
             </div>
             <div className="row mb-3">
