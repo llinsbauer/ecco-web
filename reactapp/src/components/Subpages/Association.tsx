@@ -5,6 +5,9 @@ import {AssociationResponse} from "../../Domain/Model/Backend/AssociationRespons
 import {AppState, useSharedState} from "../../states/AppState";
 import {AssociationModel} from "../../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../../Domain/Model/Frontend/AssociationInspection";
+import {ArtifactsPerAssociation} from "../Charts/Home.ArtifactsPerAssociation";
+import {ArtifactsPerDepth} from "../Charts/Home.ArtifactsPerDepth";
+import {ModulesPerOrder} from "../Charts/Home.ModulesPerOrder";
 
 export const Association: React.FC = () => {
 
@@ -66,6 +69,27 @@ export const Association: React.FC = () => {
                 <div className="col-12">
                     <div className="accordion" id="accordionExample">
                         {associations}
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="artifactsperassociation">
+                        <ArtifactsPerAssociation />
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="artifactsperdepth">
+                        <ArtifactsPerDepth />
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <div className="col-12">
+                    <div className={"d-flex justify-content-center"} id="modulesperorder">
+                        <ModulesPerOrder />
                     </div>
                 </div>
             </div>

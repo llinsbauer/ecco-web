@@ -5,6 +5,7 @@ import {FeatureVersionModel} from "../../Domain/Model/Backend/FeatureVersionMode
 import {CommunicationService} from "../../services/CommunicationService";
 import {FeatureVersionResponse} from "../../Domain/Model/Backend/FeatureVersionResponse";
 import {FeatureSpecificRevisionDetail} from "./Feature.Detail.RevisionDetail";
+import {DetailFeatureView} from "./Feature.Detail";
 
 
 interface FeatureSpecificRevisionProps {
@@ -19,7 +20,6 @@ export const FeatureSpecificRevisionList: React.FC<FeatureSpecificRevisionProps>
     useEffect(() => {
         CommunicationService.getInstance().getFeatureversionsFromFeature(currentFeature).then((featureVersionResponse: FeatureVersionResponse) => {
             setFeatureRevisions(featureVersionResponse.data);
-            console.log("aktuell angefrage Featureversion", featureVersionResponse.data);
         });
         setCurrentFeatureRevision(null);
     }, [currentFeature]);
@@ -29,21 +29,32 @@ export const FeatureSpecificRevisionList: React.FC<FeatureSpecificRevisionProps>
             setCurrentFeatureRevision(featureVersion);
         }
 
+        let validHTMLID = "validid" + featureVersion.version;
+
         return (
-            <a key={featureVersion.version} onClick={setCurrentFeatureRevisionCallback} className={"list-group-item list-group-item-action"} >
-                {featureVersion.version}
-            </a>
+            <div key={validHTMLID} className="card">
+                <div className="card-header" id="headingThree">
+                    <h2 className="mb-0">
+                        <button onClick={setCurrentFeatureRevisionCallback} className="btn btn-link btn-block text-center collapsed" type="button"
+                                data-toggle="collapse" data-target={"#" + validHTMLID}>
+                            {featureVersion.version}
+                        </button>
+                    </h2>
+                </div>
+                <div id={validHTMLID} className="collapse" data-parent="#featureVersionAccordionList">
+                    {currentFeatureRevision == null ? "" : <FeatureSpecificRevisionDetail currentFeature={currentFeature} currentFeatureRevision={currentFeatureRevision} />}
+                </div>
+            </div>
         );
     });
 
     return (
-        <div className="row mt-4">
+        <div className="row">
             <div className="col-12">
                 <h3 className="header">Aktuelle Featureversion zu {currentFeature.name}</h3>
-                <div className="list-group">
+                <div id={"featureVersionAccordionList"} className={"accordion"}>
                     {featureRevisionsComponent}
                 </div>
-                {currentFeatureRevision == null ? "" : <FeatureSpecificRevisionDetail currentFeature={currentFeature} currentFeatureRevision={currentFeatureRevision} />}
             </div>
         </div>
     );

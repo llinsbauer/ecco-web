@@ -72,34 +72,24 @@ export const DetailFeatureView : React.FC<DetailViewProps> = ({currentSelectedFe
     }
 
     return (
-        <div className="col-6">
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="m-3">
-                                <label htmlFor={tmpCurrentFeatureModel.name}>Description of {tmpCurrentFeatureModel.name}</label>
-                                <textarea id={tmpCurrentFeatureModel.name}
-                                          value={(tmpCurrentFeatureModel.description == null ? "" : tmpCurrentFeatureModel.description)}
-                                          className={"form-control"}
-                                          onChange={changeFeatureDescription} />
-                            </div>
-                            <div className="m-3 d-flex justify-content-between">
-                                <button type={"button"} className={"btn btn-success"} disabled={successButtonDisabled} onClick={saveChangesInAppState}>
-                                    Save Changes
-                                </button>
-                                <button type={"button"} className={"btn btn-danger"} disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>
-                                    Reset to Initial State
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+        <div className="row">
+            <div className="col-12">
+                <div className="m-3">
+                    <label htmlFor={tmpCurrentFeatureModel.name}>Description of {tmpCurrentFeatureModel.name}</label>
+                    <textarea id={tmpCurrentFeatureModel.name}
+                              value={(tmpCurrentFeatureModel.description == null ? "" : tmpCurrentFeatureModel.description)}
+                              className={"form-control"}
+                              onChange={changeFeatureDescription} />
                 </div>
-                <div className="col-12">
-                    <FeatureSpecificRevisionList currentFeature={currentSelectedFeatureModel} />
+                <div className="m-3 d-flex justify-content-between">
+                    <button type={"button"} className={"btn btn-success"} disabled={successButtonDisabled} onClick={saveChangesInAppState}>
+                        Save Changes
+                    </button>
+                    <button type={"button"} className={"btn btn-danger"} disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>
+                        Reset to Initial State
+                    </button>
                 </div>
             </div>
         </div>
     );
-
  };

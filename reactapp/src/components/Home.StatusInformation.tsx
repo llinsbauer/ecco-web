@@ -67,34 +67,6 @@ export const StatusInformation : React.FC  = () => {
                     <MyDropzone />
                 </div>
             </div>
-            <div className="row mb-3">
-                <div className="col-12">
-                    <div className={"d-flex justify-content-center"} id="artifactsperassociation">
-                        <ArtifactsPerAssociation />
-                    </div>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <div className="col-12">
-                    <div className={"d-flex justify-content-center"} id="modulesperorder">
-                        <ModulesPerOrder />
-                    </div>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <div className="col-12">
-                    <div className={"d-flex justify-content-center"} id="artifactsperdepth">
-                        <ArtifactsPerDepth />
-                    </div>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <div className="col-12">
-                    <div className={"d-flex justify-content-center"} id="revisionperfeature">
-                        <RevisionPerFeature />
-                    </div>
-                </div>
-            </div>
         </div>
     );
 }

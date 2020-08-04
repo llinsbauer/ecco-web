@@ -1,27 +1,16 @@
 import * as React from "react";
-import {
-    Router,
-    Link,
-    Switch,
-    Route
-} from "react-router-dom";
-import { createBrowserHistory } from "history";
+import { BrowserRouter as Router, Link, Switch, Route } from "react-router-dom";
 import { Feature } from "./Subpages/Feature";
 import { Artifact } from "./Subpages/Artifact";
 import { Home } from "./Home";
 import { useSharedState } from "../states/AppState";
-import {Association} from "./Subpages/Association";
-
-const history = createBrowserHistory();
+import { Association } from "./Subpages/Association";
 
 export const Approuter : React.FC = () => {
-
     const [appState, setAppState] = useSharedState();
-
     let disabledCSSClass = "disabled";
-
     return (
-        <Router history={history}>
+        <Router>
             <nav className="col-12 navbar navbar-expand-lg navbar-light bg-light">
                 <a className="navbar-brand" href="/">EccoHub</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"

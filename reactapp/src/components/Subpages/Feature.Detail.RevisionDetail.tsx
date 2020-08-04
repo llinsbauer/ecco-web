@@ -30,19 +30,10 @@ export const FeatureSpecificRevisionDetail : React.FC<FeatureDetailRevisionDetai
     }
 
     const saveChangesInAppState = () => {
-        // setAppState((previousState: AppState) => ({
-        //     ...previousState,
-        //     features: previousState.features.map(walkerFeature => (walkerFeature.name == tmpCurrentFeature.name) ?
-        //         {...walkerFeature, description: tmpCurrentFeature.description} :
-        //         walkerFeature
-        //     )
-        // }));
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
-        CommunicationService.getInstance().updateFeatureversionFromFeature(currentFeature, tmpCurrentFeatureModel)
-            .then((featureVersionResponse: FeatureVersionResponse) => {
-            console.log("Response ist angekommen");
-        });
+        CommunicationService.getInstance().updateFeatureversionFromFeature(currentFeature, tmpCurrentFeatureModel).then(
+            (featureVersionResponse: FeatureVersionResponse) => {});
     }
 
     const resetChangesToInitialState = () => {
@@ -52,25 +43,23 @@ export const FeatureSpecificRevisionDetail : React.FC<FeatureDetailRevisionDetai
     }
 
     return (
-        <div className="card">
-            <div className="card-body">
-                <div className="m-3">
-                    <label htmlFor={tmpCurrentFeatureModel.version}>Description of {tmpCurrentFeatureModel.version}</label>
-                    <textarea id={tmpCurrentFeatureModel.version}
-                              value={(tmpCurrentFeatureModel.description == null ? "" : tmpCurrentFeatureModel.description)}
-                              className={"form-control"}
-                              onChange={changeFeatureDescription} />
-                </div>
-                <div className="m-3 d-flex justify-content-between">
-                    <button type={"button"} className={"btn btn-success"} disabled={successButtonDisabled} onClick={saveChangesInAppState}>
-                        Save Changes
-                    </button>
-                    <button type={"button"} className={"btn btn-danger"} disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>
-                        Reset to Initial State
-                    </button>
-                </div>
+        <>
+            <div className="m-3">
+                <label htmlFor={tmpCurrentFeatureModel.version}>Description of {tmpCurrentFeatureModel.version}</label>
+                <textarea id={tmpCurrentFeatureModel.version}
+                          value={(tmpCurrentFeatureModel.description == null ? "" : tmpCurrentFeatureModel.description)}
+                          className={"form-control"}
+                          onChange={changeFeatureDescription} />
             </div>
-        </div>
+            <div className="m-3 d-flex justify-content-between">
+                <button type={"button"} className={"btn btn-success"} disabled={successButtonDisabled} onClick={saveChangesInAppState}>
+                    Save Changes
+                </button>
+                <button type={"button"} className={"btn btn-danger"} disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>
+                    Reset to Initial State
+                </button>
+            </div>
+        </>
     );
 
 }

@@ -19,18 +19,8 @@ export const Home : React.FC = () => {
                     plugins: apiData.data.artifactPlugins,
                     repoOperation: ""
                 }));
-            }).catch((error) => {
-                console.log(error);
-            }).finally(() => {
             });
         }
-        // else {
-        //     let communicationService = CommunicationService.getInstance();
-        //     communicationService.corsTest().then((value) => {
-        //         console.log(value);
-        //     });
-        //     console.log("Initialer State, kein Modal hat Daten eingegeben...");
-        // }
     }, [appState.directory, appState.repoOperation])
 
     return (

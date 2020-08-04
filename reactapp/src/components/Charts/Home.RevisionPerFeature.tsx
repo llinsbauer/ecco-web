@@ -70,8 +70,14 @@ export const RevisionPerFeature : React.FC = () => {
     }
 
     return (
-        <button onClick={showPieChartForRevisionsPerFeature} className={"btn btn-primary"}>
-            show PieChart For Revisions Per Feature
-        </button>
+        <div className="row mb-3">
+            <div className="col-12">
+                <div className={"d-flex justify-content-center"} id={CHARTID}>
+                    <button onClick={showPieChartForRevisionsPerFeature} className={"btn btn-primary"}>
+                        show PieChart For Revisions Per Feature
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }

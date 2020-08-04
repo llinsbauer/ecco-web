@@ -3,7 +3,6 @@ import { Approuter } from "./Approuter";
 import { SharedStateProvider } from "../states/AppState";
 
 export const App: React.FC = () => {
-
     return (
         <SharedStateProvider>
             <div className={"row"}>
