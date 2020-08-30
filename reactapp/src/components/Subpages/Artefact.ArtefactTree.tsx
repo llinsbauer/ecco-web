@@ -28,12 +28,10 @@ export const ArtefactTree : React.FC = () => {
     }
 
     const createOrderedBagde = (givenNode: ArtefactTreeNodeModel) => {
-        console.log("givenNode is Ordered", givenNode.ordered);
         return ((givenNode.ordered == true) ? <span className="badge badge-success">isOrdered</span> : <span className="badge badge-danger">isNotOrdered</span>);
     }
 
     const createAtomicBagde = (givenNode: ArtefactTreeNodeModel) => {
-        console.log("givenNode is atomic", givenNode.atomic);
         return ((givenNode.atomic == true) ? <span className="badge badge-success">isAtomic</span> : <span className="badge badge-danger">isNotAtomic</span>);
     }
 

@@ -4,27 +4,38 @@ import {useEffect, useState} from "react";
 import { CommunicationService } from "../../services/CommunicationService";
 import {EChartOption} from "echarts";
 import {ArtefactgraphResponse} from "../../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphResponse";
+import {ArtefactgraphFilter} from "../../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter";
 
-export const ArtifactGraphChart : React.FC = () => {
+interface ArtifactGraphProperties {
+    maxChildCountLimit: number
+}
+
+export const ArtifactGraphChart : React.FC<ArtifactGraphProperties> = ({maxChildCountLimit}) => {
 
     const CHARTID = "artifactGraph";
 
     const [nodeList, setNodeList] = useState([]);
     const [edgeList, setEdgeList] = useState([]);
+    const [isChartInit, setIsChartInit] = useState<boolean>(false);
+
+    const artefactGraphfilter = new ArtefactgraphFilter();
+    artefactGraphfilter.maxChildCount = maxChildCountLimit;
 
     useEffect(() => {
-        CommunicationService.getInstance().getArtifactgraph().then((value: ArtefactgraphResponse) => {
-            console.log(value);
+        CommunicationService.getInstance().getArtifactgraph(artefactGraphfilter).then((value: ArtefactgraphResponse) => {
             setNodeList(value.data.artefactgraphNodeList);
             setEdgeList(value.data.artefactgraphEdgeList);
         });
         document.getElementById(CHARTID).style.height = "800px";
-    }, []);
+    }, [maxChildCountLimit]);
+
+    useEffect(() => {
+        showArtefactGraph();
+    }, [nodeList, edgeList]);
 
     function showArtefactGraph() {
         let myGraphChart = Echarts.init(document.getElementById(CHARTID) as HTMLDivElement);
         nodeList.forEach((node) => {
-            node.symbolSize = 20;
             node.label = {
                 show: true,
                 position: "inside",
@@ -66,8 +77,17 @@ export const ArtifactGraphChart : React.FC = () => {
                 }
             ]
         }
-
         myGraphChart.setOption(options);
+    }
+
+    const callbackForECharts = (params : any) => {
+        if (params.componentType === 'series') {
+            if (params.seriesType === 'graph') {
+                if (params.dataType === 'node') {
+                    console.log(params);
+                }
+            }
+        }
     }
 
     return (

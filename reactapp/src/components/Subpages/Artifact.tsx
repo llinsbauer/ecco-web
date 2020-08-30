@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AppState, useSharedState } from "../../states/AppState";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import { CommunicationService } from "../../services/CommunicationService";
 import { AssociationResponse } from "../../Domain/Model/Backend/AssociationResponse";
 import { AssociationInspection } from "../../Domain/Model/Frontend/AssociationInspection";
@@ -12,6 +12,8 @@ import {ArtifactGraphChart} from "../Charts/Artifact.GraphChart";
 export const Artifact: React.FC = () => {
 
     let [appState, setAppState] = useSharedState();
+    let [maxChildNodeCount, setMaxChildNodeCount] = useState<number>(10);
+    let [tmpMaxChildNodeCount, setTmpMaxChildNodeCount] = useState<number>( 10);
 
     useEffect(() => {
         CommunicationService.getInstance().getAssociations().then((associationResponse: AssociationResponse) => {
@@ -75,6 +77,18 @@ export const Artifact: React.FC = () => {
         );
     });
 
+
+    const saveNewMaxChildNodeCountInState = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let newChildCountLimit = (event.target.validity.valid) ? (parseInt(event.target.value) | 0) : maxChildNodeCount;
+        setTmpMaxChildNodeCount(newChildCountLimit);
+    }
+
+    const renderArtifactGraphWithNewFilter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            setMaxChildNodeCount(tmpMaxChildNodeCount);
+        }
+    }
+
     return (
         <div className="col-12">
             <h1>State-Analyse</h1>
@@ -92,8 +106,14 @@ export const Artifact: React.FC = () => {
                 <div className="col-9">
                     {appState.artifactTree != null ? <ArtefactTree /> : ""}
                 </div>
-                <div id={"artifactGraph"} className="col-12">
-                    <ArtifactGraphChart />
+                <div id={"artifactGraph"} className="col-10">
+                    <ArtifactGraphChart maxChildCountLimit={maxChildNodeCount} />
+                </div>
+                <div className="col-2">
+                    <label>
+                        Child Count Limit:
+                        <input type="text" pattern="[0-9]*" value={tmpMaxChildNodeCount} onChange={saveNewMaxChildNodeCountInState} onKeyDown={renderArtifactGraphWithNewFilter} />
+                    </label>
                 </div>
             </div>
         </div>

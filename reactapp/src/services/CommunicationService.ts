@@ -4,6 +4,7 @@ import { FeatureModel } from "../Domain/Model/Backend/FeatureModel";
 import {FeatureVersionModel} from "../Domain/Model/Backend/FeatureVersionModel";
 import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
+import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter";
 
 const axios = require("axios");
 
@@ -12,6 +13,7 @@ export class CommunicationService {
     private static readonly BASE_URI = "http://localhost:8080/rest/api";
     private static readonly FEATURE_ENDPOINT = "/features";
     private static readonly ARTIFACT_ENDPOINT = "/artefacts";
+    private static readonly ARTIFACT_GRAPH_ENDPOINT = "/graph";
     private static readonly REPOSITORY_ENDPOINT = "/repository";
     private static readonly ASSOCIATIONS_ENDPOINT = "/associations";
     private static readonly COMMIT_FILES_INSIDE_ZIP_FILE = "/commit";
@@ -19,7 +21,6 @@ export class CommunicationService {
     private static readonly NUMBER_OF_ARTIFACTS_PER_DEPTH_IN_ASSOCIATION_ENDPOINT = "/artifactsperdepth";
     private static readonly NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT = "/numberofrevisions";
     private static readonly NUMBER_OF_MODULES_PER_ORDER_IN_ASSOCIATION_ENDPOINT = "/modulesperorder";
-    private static readonly ECCO_DIRECTORY = "/.ecco";
 
     private static communicationServiceInstance: CommunicationService;
 
@@ -43,9 +44,15 @@ export class CommunicationService {
         )
     }
 
-    public getArtifactgraph() : Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ARTIFACT_ENDPOINT}`
+    public getArtifactgraph(artefactgraphFilter: ArtefactgraphFilter) : Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'application/json',
+        };
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.ARTIFACT_ENDPOINT + CommunicationService.ARTIFACT_GRAPH_ENDPOINT}`,
+            JSON.stringify(artefactgraphFilter),
+            config
         )
     }
 
@@ -91,7 +98,6 @@ export class CommunicationService {
         config.headers = {
             'Content-Type': 'application/json',
         };
-        currentFeatureModel.name
         return axios.post(
             `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.name}/version`,
             JSON.stringify(updatedFeatureVersionModel),
