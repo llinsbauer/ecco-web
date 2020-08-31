@@ -14,6 +14,7 @@ export class CommunicationService {
     private static readonly FEATURE_ENDPOINT = "/features";
     private static readonly ARTIFACT_ENDPOINT = "/artefacts";
     private static readonly ARTIFACT_GRAPH_ENDPOINT = "/graph";
+    private static readonly ARTIFACT_UPDATED_GRAPH_ENDPOINT = "/updatedgraph";
     private static readonly REPOSITORY_ENDPOINT = "/repository";
     private static readonly ASSOCIATIONS_ENDPOINT = "/associations";
     private static readonly COMMIT_FILES_INSIDE_ZIP_FILE = "/commit";
@@ -40,6 +41,19 @@ export class CommunicationService {
         return axios.post(
             `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.COMMIT_FILES_INSIDE_ZIP_FILE}`,
             formData,
+            config
+        )
+    }
+
+    public updateArtifactgraphOnNodeID(nodeID: string, maxChildCount: number) : Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'application/json',
+        };
+        let artifactgraphFilter = new ArtefactgraphFilter(maxChildCount, nodeID);
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.ARTIFACT_ENDPOINT + CommunicationService.ARTIFACT_UPDATED_GRAPH_ENDPOINT}`,
+            JSON.stringify(artifactgraphFilter),
             config
         )
     }
